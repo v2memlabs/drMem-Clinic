@@ -1,17 +1,18 @@
-# muayenehane_klinik_yonetim
+# drMem Clinic
 
-A new Flutter project.
+Klinik yönetimi ve hasta takip sistemi (Flutter + Supabase).
 
-## Getting Started
+**Repository:** https://github.com/v2memlabs/drMem-Clinic
 
-This project is a starting point for a Flutter application.
+## Geliştirme
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+flutter run
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Supabase modu için [docs/backend/config.example.md](docs/backend/config.example.md).
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Yol haritası
+
+[docs/supabase-integration-roadmap.md](docs/supabase-integration-roadmap.md)

@@ -1,0 +1,6 @@
+{
+  "DATA_BACKEND": "supabase",
+  "APP_ENV": "production",
+  "SUPABASE_URL": "https://YOUR_PROJECT_REF.supabase.co",
+  "SUPABASE_ANON_KEY": "your-anon-key-here"
+}

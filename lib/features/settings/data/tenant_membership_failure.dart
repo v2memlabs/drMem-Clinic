@@ -1,0 +1,15 @@
+enum TenantMembershipFailure {
+  forbidden,
+  notFound,
+  invalidRole,
+  invalidStatus,
+  lastAdminBlocked,
+  selfUpdateBlocked,
+  noActiveTenant,
+  noActiveProfile,
+  invitationAcceptanceRequired,
+  invalidLoginUsername,
+  loginUsernameTaken,
+  notConfigured,
+  unknown,
+}

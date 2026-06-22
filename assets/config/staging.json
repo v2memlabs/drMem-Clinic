@@ -1,0 +1,7 @@
+{
+  "SUPABASE_URL": "https://dgzmybbgrofapjptjspf.supabase.co",
+  "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnem15YmJncm9mYXBqcHRqc3BmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzMTczNzgsImV4cCI6MjA5NDg5MzM3OH0.M3UAmK4_BY56Qh0FZPEm306ncTxiMV-C57oBLz-6Yo4",
+  "DATA_BACKEND": "supabase",
+  "APP_ENV": "staging",
+  "MAINTENANCE_MODE": "true"
+}

@@ -6,7 +6,6 @@ import 'package:v2mem_clinic/core/constants/app_roles.dart';
 import 'package:v2mem_clinic/features/pdf_outputs/contextual_pdf_actions.dart';
 import 'package:v2mem_clinic/features/patients/patient_detail_screen.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
-import 'package:v2mem_clinic/shared/widgets/detail_actions_panel.dart';
 
 void main() {
   tearDown(AuthSession.clear);
@@ -42,26 +41,29 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('doctor sees single PDF Oluştur action', (tester) async {
+  testWidgets('doctor sees PDF Oluştur on file card, not in patient actions list',
+      (tester) async {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await pumpPatientDetail(tester, role: AppRoles.doctor);
 
     expect(find.text(ContextualPdfActions.createLabel), findsOneWidget);
     expect(find.text('PDF Hazırla'), findsNothing);
-
-    final panel = tester.widget<DetailActionsPanel>(
-      find.byType(DetailActionsPanel),
-    );
-    final pdfActions = panel.actions
-        .where((a) => a.label == ContextualPdfActions.createLabel)
-        .length;
-    expect(pdfActions, 1);
+    expect(find.text('Hasta İşlemleri'), findsOneWidget);
+    expect(find.text('Dosya ve PDF Kayıtları'), findsOneWidget);
+    expect(find.text('Timeline'), findsNothing);
+    expect(find.text('Fizyoterapiye Yönlendir'), findsOneWidget);
+    expect(find.text('Dosyalar'), findsNothing);
   });
 
-  testWidgets('assistant sees PDF Oluştur action', (tester) async {
+  testWidgets('assistant sees PDF Oluştur on file card, not in patient actions list',
+      (tester) async {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await pumpPatientDetail(tester, role: AppRoles.assistant);
 
     expect(find.text(ContextualPdfActions.createLabel), findsOneWidget);
+    expect(find.text('Hasta İşlemleri'), findsOneWidget);
+    expect(find.text('Dosyalar'), findsNothing);
+    expect(find.text('Tümünü gör'), findsOneWidget);
+    expect(find.text('Tüm özetler'), findsOneWidget);
   });
 }

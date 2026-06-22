@@ -10,11 +10,9 @@ import '../../shared/layout/responsive_page_body.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/clinical_state_message.dart';
 import '../../shared/widgets/detail_action_labels.dart';
-import '../../shared/widgets/detail_actions_panel.dart';
 import '../../shared/widgets/detail_header_card.dart';
 import '../../shared/widgets/info_section_card.dart';
 import '../../shared/widgets/page_header.dart';
-import '../pdf_outputs/contextual_pdf_actions.dart';
 import '../../shared/widgets/clinical_list_panel.dart';
 import '../clinical_encounter/post_encounter_wizard/widgets/patient_surgical_quote_banner.dart';
 import '../clinical_encounter/data/assistant_clinical_summary_list_load_result.dart';
@@ -37,7 +35,6 @@ import '../patient_tags/models/patient_tag.dart';
 import '../patient_tags/widgets/patient_tag_chip.dart';
 import '../patient_tags/widgets/patient_tag_selector_dialog.dart';
 import '../physiotherapy/data/patient_rehab_last_session_display.dart';
-import '../payments/widgets/patient_material_charge_launcher.dart';
 import '../physiotherapy/data/patient_rehab_referral_summary_data_source.dart';
 import '../physiotherapy/data/patient_rehab_referral_summary_display.dart';
 import '../physiotherapy/data/patient_rehab_summary_load_result.dart';
@@ -60,10 +57,24 @@ import 'data/patient_identity_privacy.dart';
 import 'data/patient_remote_display.dart';
 import 'models/patient.dart';
 import 'patient_display_helpers.dart';
+import 'patient_detail/patient_detail_action_context.dart';
+import 'patient_detail/patient_detail_action_list.dart';
+import 'patient_detail/patient_detail_action_registry.dart';
 import 'widgets/patient_premium_surfaces.dart';
 
 const int _kMaxHeaderTags = 3;
-const int _kMaxQuickAccessLinks = 4;
+
+Widget? _patientDetailCardTrailing(
+  PatientDetailActionContext ctx,
+  PatientDetailCardKind kind,
+) {
+  final actions = PatientDetailActionRegistry.cardTrailingActions(ctx, kind);
+  if (actions.isEmpty) return null;
+  return PatientDetailCardTrailingBar(
+    actionContext: ctx,
+    actions: actions,
+  );
+}
 
 /// Hasta detay kartı — başlık kart içinde, dış section başlığı yok.
 class _PatientDetailCard extends StatelessWidget {
@@ -184,22 +195,6 @@ class _PatientInfoRows extends StatelessWidget {
       ],
     );
   }
-}
-
-class _QuickLink {
-  final IconData icon;
-  final String title;
-  final String route;
-  final bool visible;
-  final bool launchesMaterialCharge;
-
-  const _QuickLink({
-    required this.icon,
-    required this.title,
-    this.route = '',
-    required this.visible,
-    this.launchesMaterialCharge = false,
-  });
 }
 
 class PatientDetailScreen extends StatefulWidget {
@@ -331,14 +326,6 @@ class _PatientDetailLoadedView extends StatefulWidget {
 
   static bool get _showsRehabShort => AuthSession.canViewClinicalEncounters;
 
-  static String _actionsPanelTitle() {
-    if (AuthSession.canViewClinicalEncounters) return 'Klinik İşlemler';
-    if (AuthSession.canViewClinicalDiagnosisSummary) {
-      return 'Operasyonel İşlemler';
-    }
-    return 'İşlemler';
-  }
-
   @override
   State<_PatientDetailLoadedView> createState() =>
       _PatientDetailLoadedViewState();
@@ -421,13 +408,6 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
     final patient = _patient;
     final pid = patient.id;
     final q = '?patientId=$pid';
-    final showQuickAccess = !_PatientDetailLoadedView._showsDoctorClinical;
-    final quickLinks = showQuickAccess
-        ? _buildQuickAccessLinks(pid)
-            .where((l) => l.visible)
-            .take(_kMaxQuickAccessLinks)
-            .toList()
-        : <_QuickLink>[];
 
     if (_PatientDetailLoadedView._showsDoctorClinical) {
       return FutureBuilder<ClinicalEncounterListLoadResult>(
@@ -450,7 +430,6 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
             patient: patient,
             pid: pid,
             q: q,
-            quickLinks: quickLinks,
             clinicalResult: active,
             clinicalEncounters: encounters,
             clinicalLoading: waiting && _cachedClinical == null,
@@ -482,7 +461,6 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
             patient: patient,
             pid: pid,
             q: q,
-            quickLinks: quickLinks,
             assistantResult: active,
             assistantSummaries: summaries,
             assistantLoading: waiting && _cachedAssistant == null,
@@ -497,7 +475,6 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
       patient: patient,
       pid: pid,
       q: q,
-      quickLinks: quickLinks,
     );
   }
 
@@ -506,7 +483,6 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
     required Patient patient,
     required String pid,
     required String q,
-    required List<_QuickLink> quickLinks,
     ClinicalEncounterListLoadResult? clinicalResult,
     List<ClinicalEncounter>? clinicalEncounters,
     bool clinicalLoading = false,
@@ -516,13 +492,12 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
     bool assistantLoading = false,
     VoidCallback? onAssistantRetry,
   }) {
-    final actions = _buildDetailActions(
-      context,
+    final actionCtx = PatientDetailActionContext.fromView(
       patientId: pid,
-      query: q,
       clinicalEncounters: clinicalEncounters,
-      assistantSummaries: assistantSummaries,
+      showsAssistantClinical: _PatientDetailLoadedView._showsAssistantClinical,
     );
+    final listActions = PatientDetailActionRegistry.listActions(actionCtx);
 
     final bodyCards = <Widget>[
       _PatientBasicInfoCard(
@@ -531,7 +506,10 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
       ),
       if (AuthSession.canViewFiles &&
           PatientFileMetadataModuleAvailability.isOperational)
-        _PatientFileMetadataSection(patientId: pid),
+        _PatientFileMetadataSection(
+          patientId: pid,
+          actionContext: actionCtx,
+        ),
       if (_PatientDetailLoadedView._showsDoctorClinical)
         _PatientDoctorClinicalSection(
           patientId: pid,
@@ -555,9 +533,13 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
           summaries: assistantSummaries ?? const [],
           isLoading: assistantLoading,
           onRetry: onAssistantRetry ?? _reloadAssistant,
+          actionContext: actionCtx,
         ),
       if (_PatientDetailLoadedView._showsRehabShort)
-        _PatientRehabShortSummary(patientId: pid),
+        _PatientRehabShortSummary(
+          patientId: pid,
+          actionContext: actionCtx,
+        ),
     ];
 
     return AppShell(
@@ -571,35 +553,11 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
               icon: Icons.person_outline,
               leadingBack: true,
               fallbackRoute: '/patients',
-              actions: [
-                if (AuthSession.canEditClinicalEncounters)
-                  FilledButton.icon(
-                    onPressed: () async {
-                      await context.push(
-                        '/clinical-records/new?patientId=$pid',
-                      );
-                      if (mounted) _reloadClinical();
-                    },
-                    icon: const Icon(Icons.add_rounded, size: 18),
-                    label: const Text('Yeni Muayene'),
-                  ),
-                if (AuthSession.canViewAppointments) ...[
-                  OutlinedButton.icon(
-                    onPressed: () => context.push(
-                      '/appointments/new?patientId=$pid',
-                    ),
-                    icon: const Icon(Icons.event_outlined, size: 18),
-                    label: const Text('Yeni Randevu'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: () => context.push(
-                      '/appointments/new?patientId=$pid&type=fizikTedavi',
-                    ),
-                    icon: const Icon(Icons.healing_outlined, size: 18),
-                    label: const Text('FTR Randevusu'),
-                  ),
-                ],
-              ],
+              actions: _buildPatientDetailHeaderActions(
+                context,
+                patientId: pid,
+                onAfterClinicalCreate: _reloadClinical,
+              ),
             ),
             _PatientHeaderCard(
               patient: patient,
@@ -626,14 +584,11 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
             ),
             const SizedBox(height: AppSpacing.sm),
             ClinicalStackedSections(children: bodyCards),
-            if (quickLinks.isNotEmpty) ...[
+            if (listActions.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.sm),
-              _PatientQuickAccess(links: quickLinks, patientId: pid),
-            ],
-            if (actions.isNotEmpty) ...[
-              DetailActionsPanel(
-                title: _PatientDetailLoadedView._actionsPanelTitle(),
-                actions: actions,
+              PatientDetailActionList(
+                actionContext: actionCtx,
+                actions: listActions,
               ),
             ],
           ],
@@ -643,305 +598,90 @@ class _PatientDetailLoadedViewState extends State<_PatientDetailLoadedView> {
   }
 }
 
-_QuickLink? _materialChargeQuickLink() {
-  if (!AuthSession.canChargePatientMaterials) return null;
-  return const _QuickLink(
-    icon: Icons.medical_services_outlined,
-    title: 'Malzeme Şarjı',
-    visible: true,
-    launchesMaterialCharge: true,
-  );
-}
-
-List<_QuickLink> _withMaterialChargeLink(List<_QuickLink> links) {
-  final material = _materialChargeQuickLink();
-  if (material == null) return links;
-  return [material, ...links];
-}
-
-List<_QuickLink> _buildQuickAccessLinks(String patientId) {
-  final q = '?patientId=$patientId';
-
-  if (AuthSession.canViewClinicalEncounters) {
-    return _withMaterialChargeLink([
-      _QuickLink(
-        icon: Icons.assignment_outlined,
-        title: 'Muayene Kayıtları',
-        route: '/clinical-records$q',
-        visible: true,
+List<Widget> _buildPatientDetailHeaderActions(
+  BuildContext context, {
+  required String patientId,
+  VoidCallback? onAfterClinicalCreate,
+}) {
+  if (AuthSession.canEditClinicalEncounters) {
+    return [
+      _compactPatientHeaderButton(
+        label: 'Yeni Muayene',
+        icon: Icons.add_rounded,
+        filled: true,
+        onPressed: () async {
+          await context.push('/clinical-records/new?patientId=$patientId');
+          onAfterClinicalCreate?.call();
+        },
       ),
-      _QuickLink(
-        icon: Icons.picture_as_pdf_outlined,
-        title: 'PDF Çıktıları',
-        route: '/pdf-outputs$q',
-        visible: AuthSession.canViewPdfOutputs,
-      ),
-      _QuickLink(
-        icon: Icons.timeline_outlined,
-        title: 'Timeline',
-        route: '/patient-timeline$q',
-        visible: AuthSession.canViewPatientTimeline &&
-            TimelineModuleAvailability.isOperational,
-      ),
-      _QuickLink(
-        icon: Icons.person_search_outlined,
-        title: 'Fizyoterapi Yönlendirmeleri',
-        route: '/physiotherapy/referrals$q',
-        visible: AuthSession.canViewPhysiotherapy,
-      ),
-      _QuickLink(
-        icon: Icons.folder_outlined,
-        title: 'Dosyalar',
-        route: '/files$q',
-        visible: AuthSession.canViewFiles &&
-            PatientFileMetadataModuleAvailability.isOperational,
-      ),
-      _QuickLink(
-        icon: Icons.event_outlined,
-        title: 'Randevular',
-        route: '/appointments$q',
-        visible: AuthSession.canViewAppointments,
-      ),
-      _QuickLink(
-        icon: Icons.warning_amber_outlined,
-        title: 'Klinik Uyarılar',
-        route: '/patient-alerts$q',
-        visible: AuthSession.canViewPatientAlerts,
-      ),
-    ]);
+    ];
   }
 
-  if (AuthSession.canViewClinicalDiagnosisSummary) {
-    return _withMaterialChargeLink([
-      _QuickLink(
+  if (AuthSession.canViewClinicalDiagnosisSummary &&
+      !AuthSession.canViewClinicalEncounters &&
+      AuthSession.canViewAppointments) {
+    return [
+      _compactPatientHeaderButton(
+        label: 'Yeni Randevu',
         icon: Icons.event_outlined,
-        title: 'Randevular',
-        route: '/appointments$q',
-        visible: AuthSession.canViewAppointments,
+        onPressed: () =>
+            context.push('/appointments/new?patientId=$patientId'),
       ),
-      _QuickLink(
-        icon: Icons.folder_outlined,
-        title: 'Dosyalar',
-        route: '/files$q',
-        visible: AuthSession.canViewFiles &&
-            PatientFileMetadataModuleAvailability.isOperational,
-      ),
-      _QuickLink(
-        icon: Icons.shield_outlined,
-        title: 'Onamlar',
-        route: '/consents$q',
-        visible: AuthSession.canViewConsents,
-      ),
-      _QuickLink(
-        icon: Icons.payments_outlined,
-        title: 'Ödeme / Tahsilat',
-        route: '/payments$q',
-        visible: AuthSession.canViewPayments,
-      ),
-      _QuickLink(
-        icon: Icons.healing_outlined,
-        title: 'Ön tanı/Tanı özeti',
-        route: '/clinical-records/diagnosis-summary$q',
-        visible: ClinicalSummaryModuleAvailability.assistantOperational,
-      ),
-      _QuickLink(
-        icon: Icons.mail_outline,
-        title: 'Mesajlar',
-        route: '/messages/sent$q',
-        visible: AuthSession.canViewMessages,
-      ),
-      _QuickLink(
-        icon: Icons.label_outline,
-        title: 'Hasta Etiketleri',
-        route: '/patient-tags$q',
-        visible: AuthSession.canViewPatientTags &&
-            PatientTagModuleAvailability.isOperational,
-      ),
-    ]);
+    ];
   }
 
   if (AuthSession.canViewPhysiotherapy &&
-      !AuthSession.canViewClinicalEncounters) {
-    return _withMaterialChargeLink([
-      _QuickLink(
-        icon: Icons.event_outlined,
-        title: 'Randevular',
-        route: '/appointments$q',
-        visible: AuthSession.canViewAppointments,
+      !AuthSession.canViewClinicalEncounters &&
+      AuthSession.canBookReferralAppointments) {
+    return [
+      _compactPatientHeaderButton(
+        label: 'FTR Randevusu',
+        icon: Icons.healing_outlined,
+        onPressed: () => context.push(
+          '/appointments/new?patientId=$patientId&type=fizikTedavi',
+        ),
       ),
-      _QuickLink(
-        icon: Icons.person_search_outlined,
-        title: 'Fizyoterapi Yönlendirmeleri',
-        route: '/physiotherapy/referrals$q',
-        visible: AuthSession.canViewPhysiotherapy,
-      ),
-      _QuickLink(
-        icon: Icons.note_alt_outlined,
-        title: 'Seans Notları',
-        route: '/physiotherapy/sessions$q',
-        visible: AuthSession.canViewPhysiotherapy,
-      ),
-      _QuickLink(
-        icon: Icons.payments_outlined,
-        title: 'Ödeme / Tahsilat',
-        route: '/payments$q',
-        visible: AuthSession.canViewPayments,
-      ),
-      _QuickLink(
-        icon: Icons.label_outline,
-        title: 'Hasta Etiketleri',
-        route: '/patient-tags$q',
-        visible: AuthSession.canViewPatientTags &&
-            PatientTagModuleAvailability.isOperational,
-      ),
-    ]);
+    ];
   }
 
-  return _withMaterialChargeLink([
-    _QuickLink(
-      icon: Icons.inventory_2_outlined,
-      title: 'Stok / Sarf',
-      route: '/inventory',
-      visible: AuthSession.canViewInventory,
-    ),
-  ]);
+  return const [];
 }
 
-List<DetailAction> _buildDetailActions(
-  BuildContext context, {
-  required String patientId,
-  required String query,
-  List<ClinicalEncounter>? clinicalEncounters,
-  List<AssistantClinicalSummary>? assistantSummaries,
+Widget _compactPatientHeaderButton({
+  required String label,
+  required IconData icon,
+  required VoidCallback onPressed,
+  bool filled = false,
 }) {
-  final actions = <DetailAction>[];
-  final encounters = clinicalEncounters ?? const <ClinicalEncounter>[];
-  final latest = ClinicalEncounterPatientDetailDataSource.latest(encounters);
-  final latestAssistant =
-      AssistantClinicalSummaryPatientDetailDataSource.latest(
-    assistantSummaries ?? const [],
-  );
-  final latestId = AuthSession.canViewClinicalDiagnosisSummary &&
-          !AuthSession.canViewClinicalEncounters
-      ? latestAssistant?.encounterId
-      : latest?.id;
-  final recordCount = AuthSession.canViewClinicalDiagnosisSummary &&
-          !AuthSession.canViewClinicalEncounters
-      ? (assistantSummaries?.length ?? 0)
-      : encounters.length;
+  const density = VisualDensity.compact;
+  const iconSize = 16.0;
+  const padding = EdgeInsets.symmetric(horizontal: 10, vertical: 6);
 
-  if (ContextualPdfActions.canShowCreateAction(patientId: patientId)) {
-    actions.add(
-      DetailAction(
-        label: ContextualPdfActions.createLabel,
-        icon: Icons.picture_as_pdf_outlined,
-        onPressed: () => context.push(
-          ContextualPdfActions.newFromPatient(patientId),
-        ),
+  if (filled) {
+    return FilledButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon, size: iconSize),
+      label: Text(label),
+      style: FilledButton.styleFrom(
+        visualDensity: density,
+        padding: padding,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  if (AuthSession.canViewClinicalEncounters) {
-    if (AuthSession.canViewPhysiotherapy) {
-      actions.add(
-        DetailAction(
-          label: DetailActionLabels.physiotherapyRefer,
-          icon: Icons.person_search_outlined,
-          onPressed: () {
-            final path = latestId != null
-                ? '/physiotherapy/referrals/new?patientId=$patientId&clinicalEncounterId=$latestId'
-                : '/physiotherapy/referrals/new?patientId=$patientId';
-            context.push(path);
-          },
-        ),
-      );
-    }
-    if (AuthSession.canViewPatientTimeline &&
-        TimelineModuleAvailability.isOperational) {
-      actions.add(
-        DetailAction(
-          label: 'Timeline',
-          icon: Icons.timeline_outlined,
-          onPressed: () => context.push('/patient-timeline$query'),
-        ),
-      );
-    }
-    if (AuthSession.canViewFiles &&
-        PatientFileMetadataModuleAvailability.isOperational) {
-      actions.add(
-        DetailAction(
-          label: DetailActionLabels.viewFile,
-          icon: Icons.folder_outlined,
-          onPressed: () => context.push('/files$query'),
-        ),
-      );
-    }
-    if (AuthSession.canViewAppointments) {
-      actions.add(
-        DetailAction(
-          label: DetailActionLabels.controlAppointment,
-          icon: Icons.event_outlined,
-          onPressed: () => context.push('/appointments$query'),
-        ),
-      );
-    }
-    if (AuthSession.canChargePatientMaterials) {
-      actions.add(
-        DetailAction(
-          label: 'Malzeme Şarjı',
-          icon: Icons.medical_services_outlined,
-          onPressed: () => PatientMaterialChargeLauncher.launch(
-            context,
-            patientId: patientId,
-          ),
-        ),
-      );
-    }
-    return actions;
-  }
-
-  if (AuthSession.canViewClinicalDiagnosisSummary &&
-      ClinicalSummaryModuleAvailability.assistantOperational) {
-    // Quick Access grid covers list routes; panel only for detail-only actions.
-    if (recordCount > 0 && latestId != null) {
-      actions.add(
-        DetailAction(
-          label: 'Ön tanı/Tanı özeti',
-          icon: Icons.healing_outlined,
-          onPressed: () => context.push(
-            '/clinical-records/diagnosis-summary/$latestId',
-          ),
-        ),
-      );
-    }
-    return actions;
-  }
-
-  if (AuthSession.canViewPhysiotherapy &&
-      !AuthSession.canViewClinicalEncounters) {
-    if (AuthSession.canCreatePayments) {
-      actions.add(
-        DetailAction(
-          label: 'Ödeme Kaydı',
-          icon: Icons.payments_outlined,
-          onPressed: () => context.push('/payments/new$query'),
-        ),
-      );
-    }
-    if (AuthSession.canViewAppointments) {
-      actions.add(
-        DetailAction(
-          label: DetailActionLabels.controlAppointment,
-          icon: Icons.event_outlined,
-          onPressed: () => context.push('/appointments$query'),
-        ),
-      );
-    }
-    return actions;
-  }
-
-  return actions;
+  return OutlinedButton.icon(
+    onPressed: onPressed,
+    icon: Icon(icon, size: iconSize),
+    label: Text(label),
+    style: OutlinedButton.styleFrom(
+      visualDensity: density,
+      padding: padding,
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+    ),
+  );
 }
 
 class _PatientHeaderCard extends StatefulWidget {
@@ -1387,7 +1127,7 @@ class _PatientDoctorClinicalSection extends StatelessWidget {
           icon: Icons.assignment_outlined,
           title: 'Bu hasta için henüz muayene kaydı bulunmuyor.',
           description: AuthSession.canEditClinicalEncounters
-              ? 'Alttaki işlemlerden yeni muayene kaydı oluşturabilirsiniz.'
+              ? 'Üstteki Yeni muayene ile kayıt oluşturabilirsiniz.'
               : null,
         ),
       );
@@ -1422,6 +1162,23 @@ class _PatientDoctorClinicalSection extends StatelessWidget {
               ),
             ),
           ],
+          if (AuthSession.canViewPatientTimeline &&
+              TimelineModuleAvailability.isOperational) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () =>
+                    context.push('/patient-timeline?patientId=$patientId'),
+                icon: const Icon(Icons.timeline_outlined, size: 18),
+                label: const Text('Klinik timeline'),
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: EdgeInsets.zero,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1434,6 +1191,7 @@ class _PatientAssistantClinicalSection extends StatelessWidget {
   final List<AssistantClinicalSummary> summaries;
   final bool isLoading;
   final VoidCallback onRetry;
+  final PatientDetailActionContext actionContext;
 
   const _PatientAssistantClinicalSection({
     required this.patientId,
@@ -1441,13 +1199,20 @@ class _PatientAssistantClinicalSection extends StatelessWidget {
     required this.summaries,
     required this.isLoading,
     required this.onRetry,
+    required this.actionContext,
   });
 
   @override
   Widget build(BuildContext context) {
+    final trailing = _patientDetailCardTrailing(
+      actionContext,
+      PatientDetailCardKind.assistantSummary,
+    );
+
     if (isLoading && result == null) {
       return _PatientDetailCard(
         title: 'Klinik Özet',
+        trailing: trailing,
         child: ClinicalStateMessage.loading(
           message: AssistantClinicalSummaryListUserMessages.loading,
         ),
@@ -1457,6 +1222,7 @@ class _PatientAssistantClinicalSection extends StatelessWidget {
     if (result != null && result!.hasError) {
       return _PatientDetailCard(
         title: 'Klinik Özet',
+        trailing: trailing,
         child: ClinicalStateMessage.error(
           icon: Icons.error_outline,
           title: AssistantClinicalSummaryListUserMessages.errorTitle,
@@ -1475,6 +1241,7 @@ class _PatientAssistantClinicalSection extends StatelessWidget {
     if (latest == null) {
       return _PatientDetailCard(
         title: 'Klinik Özet',
+        trailing: trailing,
         child: ClinicalStateMessage.empty(
           icon: Icons.assignment_outlined,
           title: 'Bu hasta için tanı özeti kaydı bulunmuyor.',
@@ -1484,6 +1251,7 @@ class _PatientAssistantClinicalSection extends StatelessWidget {
 
     return _PatientDetailCard(
       title: 'Klinik Özet',
+      trailing: trailing,
       child: _AssistantClinicalSummaryCard(summary: latest),
     );
   }
@@ -1504,8 +1272,12 @@ class _AssistantClinicalSummaryCard extends StatelessWidget {
 
 class _PatientRehabShortSummary extends StatefulWidget {
   final String patientId;
+  final PatientDetailActionContext actionContext;
 
-  const _PatientRehabShortSummary({required this.patientId});
+  const _PatientRehabShortSummary({
+    required this.patientId,
+    required this.actionContext,
+  });
 
   @override
   State<_PatientRehabShortSummary> createState() =>
@@ -1555,6 +1327,10 @@ class _PatientRehabShortSummaryState extends State<_PatientRehabShortSummary> {
   Widget build(BuildContext context) {
     final q = '?patientId=${widget.patientId}';
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
+    final trailing = _patientDetailCardTrailing(
+      widget.actionContext,
+      PatientDetailCardKind.rehab,
+    );
 
     return FutureBuilder<PatientRehabSummaryLoadResult>(
       future: _loadFuture,
@@ -1562,6 +1338,7 @@ class _PatientRehabShortSummaryState extends State<_PatientRehabShortSummary> {
         if (!snapshot.hasData) {
           return _PatientDetailCard(
             title: 'Rehabilitasyon Özeti',
+            trailing: trailing,
             child: ClinicalStateMessage.loading(
               message: PhysiotherapyReferralListUserMessages.loading,
             ),
@@ -1572,6 +1349,7 @@ class _PatientRehabShortSummaryState extends State<_PatientRehabShortSummary> {
         if (result.hasError) {
           return _PatientDetailCard(
             title: 'Rehabilitasyon Özeti',
+            trailing: trailing,
             child: ClinicalStateMessage.error(
               icon: Icons.error_outline,
               title: PhysiotherapyReferralListUserMessages.errorTitle,
@@ -1605,6 +1383,7 @@ class _PatientRehabShortSummaryState extends State<_PatientRehabShortSummary> {
 
         return _PatientDetailCard(
           title: 'Rehabilitasyon Özeti',
+          trailing: trailing,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -1684,92 +1463,6 @@ List<InfoSectionRow> _rehabSummaryRows(PhysiotherapyReferral latest) {
   return rows;
 }
 
-class _PatientQuickAccess extends StatelessWidget {
-  final List<_QuickLink> links;
-  final String patientId;
-
-  const _PatientQuickAccess({
-    required this.links,
-    required this.patientId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _PatientDetailCard(
-      title: 'Hızlı Erişim',
-      child: Column(
-        children: [
-          for (var i = 0; i < links.length; i++) ...[
-            if (i > 0)
-              const Divider(
-                height: 1,
-                indent: 48,
-                color: AppColors.borderSoft,
-              ),
-            _QuickLinkRow(link: links[i], patientId: patientId),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickLinkRow extends StatelessWidget {
-  final _QuickLink link;
-  final String patientId;
-
-  const _QuickLinkRow({
-    required this.link,
-    required this.patientId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (link.launchesMaterialCharge) {
-          PatientMaterialChargeLauncher.launch(
-            context,
-            patientId: patientId,
-          );
-        } else {
-          context.push(link.route);
-        }
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.sm,
-        ),
-        child: Row(
-          children: [
-            PatientPremiumSurfaces.iconBadge(link.icon),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                link.title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
-                    ),
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: AppColors.textSecondary,
-              size: 22,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-PhysiotherapyReferral? _latestReferral(List<PhysiotherapyReferral> list) {
-  return PatientRehabReferralSummaryDisplay.latest(list);
-}
-
 String _shortLine(String value) {
   final t = value.trim();
   if (t.isEmpty) return kDisplayUnspecified;
@@ -1794,8 +1487,12 @@ String _formatDate(DateTime date) {
 
 class _PatientFileMetadataSection extends StatefulWidget {
   final String patientId;
+  final PatientDetailActionContext actionContext;
 
-  const _PatientFileMetadataSection({required this.patientId});
+  const _PatientFileMetadataSection({
+    required this.patientId,
+    required this.actionContext,
+  });
 
   @override
   State<_PatientFileMetadataSection> createState() =>
@@ -1839,9 +1536,9 @@ class _PatientFileMetadataSectionState
   Widget build(BuildContext context) {
     return _PatientDetailCard(
       title: 'Dosya ve PDF Kayıtları',
-      trailing: TextButton(
-        onPressed: () => context.push('/files?patientId=${widget.patientId}'),
-        child: const Text('Tümünü gör'),
+      trailing: _patientDetailCardTrailing(
+        widget.actionContext,
+        PatientDetailCardKind.file,
       ),
       child: FutureBuilder<PatientFileMetadataListLoadResult>(
         future: _loadFuture,

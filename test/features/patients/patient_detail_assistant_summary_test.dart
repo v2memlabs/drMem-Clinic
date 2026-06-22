@@ -96,16 +96,6 @@ void main() {
     expect(find.text('Muayene Kayıtları'), findsNothing);
     expect(find.textContaining('as-p1'), findsNothing);
     expect(find.textContaining('internalDoctorNote'), findsNothing);
-
-    if (find.byType(DetailActionsPanel).evaluate().isNotEmpty) {
-      final panel = tester.widget<DetailActionsPanel>(
-        find.byType(DetailActionsPanel),
-      );
-      expect(panel.actions.length, lessThanOrEqualTo(1));
-      for (final action in panel.actions) {
-        expect(action.label, isNot('Randevu'));
-        expect(action.label, isNot('Onam'));
-      }
-    }
+    expect(find.byType(DetailActionsPanel), findsNothing);
   });
 }

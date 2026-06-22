@@ -5,13 +5,12 @@ import 'package:v2mem_clinic/core/auth/auth_session.dart';
 import 'package:v2mem_clinic/core/constants/app_roles.dart';
 import 'package:v2mem_clinic/features/patients/patient_detail_screen.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
-import 'package:v2mem_clinic/shared/widgets/detail_action_labels.dart';
 import 'package:v2mem_clinic/shared/widgets/detail_actions_panel.dart';
 
 void main() {
   tearDown(AuthSession.clear);
 
-  testWidgets('assistant view avoids duplicate list routes in action panel',
+  testWidgets('assistant view shows all operational links once in patient actions',
       (tester) async {
     AuthSession.setUser(
       AppUser(
@@ -39,26 +38,18 @@ void main() {
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
+    expect(find.text('Hasta İşlemleri'), findsOneWidget);
     expect(find.text('Randevular'), findsWidgets);
-    expect(find.text('Dosyalar'), findsWidgets);
-    expect(find.text('Onamlar'), findsWidgets);
-    expect(find.text('Ödeme / Tahsilat'), findsWidgets);
+    expect(find.text('Dosyalar'), findsNothing);
+    expect(find.text('Tümünü gör'), findsOneWidget);
+    expect(find.text('Onamlar'), findsOneWidget);
+    expect(find.text('Ödeme / Tahsilat'), findsOneWidget);
+    expect(find.text('Tüm özetler'), findsOneWidget);
+    expect(find.text('Mesajlar'), findsOneWidget);
+    expect(find.text('Hasta Etiketleri'), findsOneWidget);
+    expect(find.text('Malzeme Şarjı'), findsOneWidget);
 
-    expect(find.text('Randevu'), findsNothing);
-    expect(find.text('Onam'), findsNothing);
-    expect(find.text('Dosyayı Görüntüle'), findsNothing);
-
-    if (find.byType(DetailActionsPanel).evaluate().isNotEmpty) {
-      final panel = tester.widget<DetailActionsPanel>(
-        find.byType(DetailActionsPanel),
-      );
-      expect(panel.actions.length, lessThanOrEqualTo(1));
-      for (final action in panel.actions) {
-        expect(action.label, isNot('Randevu'));
-        expect(action.label, isNot('Onam'));
-        expect(action.label, isNot(DetailActionLabels.viewFile));
-        expect(action.label, isNot('Ödeme / Tahsilat'));
-      }
-    }
+    expect(find.text('Hızlı Erişim'), findsNothing);
+    expect(find.byType(DetailActionsPanel), findsNothing);
   });
 }

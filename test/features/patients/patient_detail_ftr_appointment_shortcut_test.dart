@@ -10,11 +10,19 @@ void main() {
   tearDown(AuthSession.clear);
 
   Future<void> pumpPatientDetail(WidgetTester tester, String role) async {
+    final displayName = switch (role) {
+      AppRoles.physiotherapist => 'Fizyoterapist A',
+      AppRoles.doctor => 'Dr. Test',
+      AppRoles.assistant => 'Asistan Test',
+      AppRoles.nurse => 'Hemşire Test',
+      _ => 'User',
+    };
+
     AuthSession.setUser(
       AppUser(
         id: 'u1',
         username: role,
-        displayName: 'User',
+        displayName: displayName,
         role: role,
       ),
     );
@@ -39,22 +47,38 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('doctor sees FTR Randevusu shortcut', (tester) async {
+  testWidgets('doctor sees FTR randevusu in patient actions list only',
+      (tester) async {
     await pumpPatientDetail(tester, AppRoles.doctor);
 
-    expect(find.text('FTR Randevusu'), findsOneWidget);
-    expect(find.text('Yeni Randevu'), findsOneWidget);
+    expect(find.text('Yeni Muayene'), findsOneWidget);
+    expect(find.text('FTR randevusu'), findsOneWidget);
+    expect(find.text('Yeni randevu'), findsOneWidget);
+    expect(find.text('Yeni Randevu'), findsNothing);
+    expect(find.text('FTR Randevusu'), findsNothing);
   });
 
-  testWidgets('assistant sees FTR Randevusu shortcut', (tester) async {
+  testWidgets('assistant header is Yeni Randevu without FTR shortcut',
+      (tester) async {
     await pumpPatientDetail(tester, AppRoles.assistant);
 
-    expect(find.text('FTR Randevusu'), findsOneWidget);
+    expect(find.text('Yeni Randevu'), findsOneWidget);
+    expect(find.text('FTR Randevusu'), findsNothing);
+    expect(find.text('FTR randevusu'), findsNothing);
   });
 
-  testWidgets('nurse does not see FTR Randevusu shortcut', (tester) async {
+  testWidgets('physiotherapist header is compact FTR Randevusu', (tester) async {
+    await pumpPatientDetail(tester, AppRoles.physiotherapist);
+
+    expect(find.text('FTR Randevusu'), findsOneWidget);
+    expect(find.text('Yeni Randevu'), findsNothing);
+  });
+
+  testWidgets('nurse does not see appointment header shortcuts', (tester) async {
     await pumpPatientDetail(tester, AppRoles.nurse);
 
     expect(find.text('FTR Randevusu'), findsNothing);
+    expect(find.text('Yeni Randevu'), findsNothing);
+    expect(find.text('Yeni Muayene'), findsNothing);
   });
 }

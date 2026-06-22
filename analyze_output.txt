@@ -1,0 +1,344 @@
+Resolving dependencies...
+Downloading packages...
+  app_links 7.0.0 (7.1.1 available)
+  code_assets 1.1.0 (1.2.0 available)
+  file_picker 8.3.7 (11.0.2 available)
+  flutter_lints 2.0.3 (6.0.0 available)
+  go_router 8.2.0 (17.2.3 available)
+  image 4.8.0 (4.9.1 available)
+  lints 2.1.1 (6.1.0 available)
+  matcher 0.12.19 (0.12.20 available)
+  meta 1.17.0 (1.18.2 available)
+  qr 3.0.2 (4.0.0 available)
+  test_api 0.7.10 (0.7.12 available)
+  vector_math 2.2.0 (2.3.0 available)
+  win32 5.15.0 (6.3.0 available)
+  xml 6.6.1 (7.0.1 available)
+Got dependencies!
+14 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing membys...                                             
+
+   info - Use 'const' with the constructor to improve performance - lib\core\navigation\app_nav_config.dart:42:12 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\core\navigation\app_nav_config.dart:50:12 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\core\navigation\app_nav_config.dart:58:12 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\core\navigation\app_nav_config.dart:66:12 - prefer_const_constructors
+warning - Unused import: '../auth/auth_session.dart' - lib\core\session\auth_session_lifecycle.dart:4:8 - unused_import
+   info - Use 'const' for final variables initialized to a constant value - lib\core\session\mock_tenant_context_bridge.dart:13:10 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - lib\features\anamnesis\anamnesis_detail_screen.dart:65:21 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\anamnesis\anamnesis_form_screen.dart:61:13 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\appointments\appointment_detail_screen.dart:82:18 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\appointments\appointment_form_screen.dart:433:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\appointments\appointment_form_screen.dart:455:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\appointments\appointment_list_screen.dart:201:21 - deprecated_member_use
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\appointments\appointment_list_screen.dart:314:21 - sort_child_properties_last
+   info - Use 'const' with the constructor to improve performance - lib\features\appointments\appointment_list_screen.dart:324:29 - prefer_const_constructors
+warning - Unused import: '../models/appointment.dart' - lib\features\appointments\data\appointment_availability_data_source.dart:5:8 - unused_import
+warning - Unused import: 'default_clinic_schedule_config_source.dart' - lib\features\appointments\data\appointment_availability_data_source.dart:10:8 - unused_import
+warning - This default clause is covered by the previous cases - lib\features\appointments\data\appointment_detail_user_messages.dart:23:7 - unreachable_switch_default
+warning - This default clause is covered by the previous cases - lib\features\appointments\data\appointment_form_user_messages.dart:28:7 - unreachable_switch_default
+warning - This default clause is covered by the previous cases - lib\features\appointments\data\appointment_list_user_messages.dart:23:7 - unreachable_switch_default
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\appointments\data\appointment_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+   info - Uses 'await' on an instance of 'List<Appointment>', which is not a subtype of 'Future' - lib\features\appointments\data\mock_async_appointment_repository_adapter.dart:29:17 - await_only_futures
+   info - Use 'const' with the constructor to improve performance - lib\features\appointments\models\clinic_schedule_config.dart:20:12 - prefer_const_constructors
+warning - The value of the local variable 'tenantCtx' isn't used - lib\features\audit\access\audit_access_legacy_display_mapper.dart:14:11 - unused_local_variable
+   info - Use 'const' with the constructor to improve performance - lib\features\audit\audit_log_detail_screen.dart:21:14 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\audit\audit_log_list_screen.dart:54:25 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\audit\audit_log_list_screen.dart:81:25 - deprecated_member_use
+warning - The declaration '_brandIcon' isn't referenced - lib\features\auth\login_screen.dart:88:10 - unused_element
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\auth\login_screen.dart:259:17 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\clinical_encounter\clinical_encounter_form_screen.dart:688:9 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\clinical_encounter\clinical_encounter_form_screen.dart:701:9 - deprecated_member_use
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\features\clinical_encounter\clinical_encounter_form_screen.dart:781:55 - invalid_null_aware_operator
+warning - Unused import: 'data/clinical_encounter_list_display.dart' - lib\features\clinical_encounter\clinical_encounter_list_screen.dart:17:8 - unused_import
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\clinical_encounter\clinical_encounter_list_screen.dart:292:21 - sort_child_properties_last
+warning - The '!' will have no effect because the receiver can't be null - lib\features\clinical_encounter\data\assistant_clinical_summary_list_data_source.dart:22:31 - unnecessary_non_null_assertion
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\clinical_encounter\data\assistant_clinical_summary_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+warning - Unused import: '../models/clinical_treatment_approach.dart' - lib\features\clinical_encounter\data\clinical_encounter_detail_sections.dart:3:8 - unused_import
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\clinical_encounter\data\clinical_encounter_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+warning - Unused import: '../../../core/theme/app_spacing.dart' - lib\features\clinical_encounter\data\clinical_role_summary_ui_states.dart:3:8 - unused_import
+warning - The '!' will have no effect because the receiver can't be null - lib\features\clinical_encounter\data\physiotherapist_clinical_summary_list_data_source.dart:25:31 - unnecessary_non_null_assertion
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\clinical_encounter\data\physiotherapist_clinical_summary_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+warning - Unnecessary cast - lib\features\clinical_encounter\data\supabase_clinical_encounter_repository.dart:147:22 - unnecessary_cast
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\features\clinical_encounter\screens\physio_clinical_summary_detail_screen.dart:131:22 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\features\clinical_encounter\screens\physio_clinical_summary_detail_screen.dart:132:17 - prefer_const_constructors
+warning - Unused import: '../../../core/theme/app_spacing.dart' - lib\features\clinical_encounter\screens\physio_clinical_summary_list_screen.dart:4:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\clinical_encounter\screens\physio_clinical_summary_list_screen.dart:94:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\clinical_encounter\screens\physio_clinical_summary_list_screen.dart:120:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\clinical_encounter\widgets\clinical_encounter_form_action_bar.dart:31:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\clinical_encounter\widgets\clinical_encounter_form_action_bar.dart:33:19 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\clinical_encounter\widgets\clinical_encounter_form_action_bar.dart:33:31 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\clinical_encounter\widgets\clinical_encounter_list_filters_row.dart:124:7 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\consents\consent_form_screen.dart:107:13 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\consents\consent_form_screen.dart:121:13 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\consents\consent_list_screen.dart:133:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\consents\consent_list_screen.dart:159:21 - deprecated_member_use
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\consents\consent_list_screen.dart:239:15 - sort_child_properties_last
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\consents\consent_template_list_screen.dart:54:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\consents\consent_template_prepare_screen.dart:308:25 - prefer_const_constructors
+warning - The '!' will have no effect because the receiver can't be null - lib\features\consents\data\consent_list_data_source.dart:27:51 - unnecessary_non_null_assertion
+warning - Unused import: '../../consents/models/consent_record.dart' - lib\features\dashboard\data\dashboard_workbench_data_source.dart:7:8 - unused_import
+warning - Unused import: '../../../core/theme/app_spacing.dart' - lib\features\dashboard\widgets\dashboard_quick_action_list.dart:6:8 - unused_import
+   info - Use 'const' with the constructor to improve performance - lib\features\diagnosis\diagnosis_detail_screen.dart:73:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\diagnosis\diagnosis_detail_screen.dart:79:23 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_form_screen.dart:80:43 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_form_screen.dart:82:47 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_form_screen.dart:84:41 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_form_screen.dart:86:50 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_list_screen.dart:72:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\diagnosis\diagnosis_list_screen.dart:95:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\examination\examination_detail_screen.dart:71:21 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\examination\examination_form_screen.dart:84:43 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\examination\examination_form_screen.dart:86:47 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\examination\examination_form_screen.dart:88:41 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\examination\examination_list_screen.dart:73:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\examination\examination_list_screen.dart:96:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\exercises\exercise_plan_detail_screen.dart:32:14 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\exercises\screens\exercise_plan_list_screen.dart:96:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\exercises\screens\exercise_plan_list_screen.dart:119:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\files\file_detail_screen.dart:22:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\imaging\imaging_detail_screen.dart:28:14 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\imaging\imaging_form_screen.dart:144:31 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\imaging\imaging_form_screen.dart:167:35 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\imaging\imaging_form_screen.dart:187:35 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\imaging\imaging_list_screen.dart:68:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\imaging\imaging_list_screen.dart:91:21 - deprecated_member_use
+warning - Unnecessary cast - lib\features\inventory\data\supabase_inventory_repository.dart:129:55 - unnecessary_cast
+warning - Unnecessary cast - lib\features\inventory\data\supabase_inventory_repository.dart:260:15 - unnecessary_cast
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\inventory\inventory_form_screen.dart:277:31 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\inventory\inventory_list_screen.dart:167:21 - deprecated_member_use
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\inventory\inventory_list_screen.dart:290:15 - sort_child_properties_last
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\features\inventory\widgets\inventory_movement_dialog.dart:46:54 - invalid_null_aware_operator
+   info - Don't use 'BuildContext's across async gaps - lib\features\inventory\widgets\inventory_movement_dialog.dart:85:28 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\features\inventory\widgets\inventory_movement_dialog.dart:89:28 - use_build_context_synchronously
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\inventory\widgets\inventory_movement_dialog.dart:122:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\maintenance\maintenance_memberships_screen.dart:168:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\maintenance\maintenance_memberships_screen.dart:181:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\maintenance\maintenance_memberships_screen.dart:297:25 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\maintenance\maintenance_memberships_screen.dart:312:25 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\maintenance\maintenance_tenants_screen.dart:97:27 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\message_send_screen.dart:231:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\message_send_screen.dart:251:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\message_send_screen.dart:274:33 - deprecated_member_use
+   info - Use the null-aware operator '?.' rather than an explicit 'null' comparison - lib\features\messages\message_send_screen.dart:286:48 - prefer_null_aware_operators
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\message_template_list_screen.dart:56:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\message_template_list_screen.dart:79:21 - deprecated_member_use
+   info - The constant name 'randevu_hatirlatma' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:4:3 - constant_identifier_names
+   info - The constant name 'kontrol_hatirlatma' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:5:3 - constant_identifier_names
+   info - The constant name 'randevu_degisim' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:6:3 - constant_identifier_names
+   info - The constant name 'konum_bilgisi' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:7:3 - constant_identifier_names
+   info - The constant name 'ameliyat_oncesi_hazirlik' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:8:3 - constant_identifier_names
+   info - The constant name 'ameliyat_sonrasi_oneri' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:9:3 - constant_identifier_names
+   info - The constant name 'egzersiz_programi' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:10:3 - constant_identifier_names
+   info - The constant name 'fizyoterapi_yonlendirme' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:11:3 - constant_identifier_names
+   info - The constant name 'pdf_bilgilendirme' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:12:3 - constant_identifier_names
+   info - The constant name 'genel_bilgilendirme' isn't a lowerCamelCase identifier - lib\features\messages\models\message_template.dart:13:3 - constant_identifier_names
+   info - Use 'const' with the constructor to improve performance - lib\features\messages\sent_message_detail_screen.dart:25:14 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\messages\sent_message_list_screen.dart:76:21 - deprecated_member_use
+warning - Unused import: '../../files/data/mock_patient_files.dart' - lib\features\patient_files\data\mock_patient_file_metadata_mapper.dart:1:8 - unused_import
+warning - Unused import: '../../files/models/patient_file.dart' - lib\features\patient_files\data\mock_patient_file_metadata_repository.dart:2:8 - unused_import
+warning - Unused import: '../models/patient_file_metadata.dart' - lib\features\patient_files\data\patient_file_metadata_list_data_source.dart:2:8 - unused_import
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\patient_files\data\patient_file_metadata_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+warning - Unused import: '../../../core/auth/auth_session.dart' - lib\features\patient_files\data\patient_file_upload_orchestrator.dart:3:8 - unused_import
+warning - Unused import: 'patient_file_metadata_repository.dart' - lib\features\patient_files\data\patient_file_upload_orchestrator.dart:10:8 - unused_import
+warning - The value of the local variable 'muted' isn't used - lib\features\patient_tags\screens\patient_tag_list_screen.dart:38:11 - unused_local_variable
+   info - Use 'const' with the constructor to improve performance - lib\features\patient_tags\widgets\patient_tag_chip.dart:75:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patient_tags\widgets\patient_tag_chip.dart:77:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patient_tags\widgets\patient_tag_chip.dart:81:14 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patient_tags\widgets\patient_tag_chip.dart:85:14 - prefer_const_constructors
+   info - Unnecessary use of string interpolation - lib\features\patients\data\patient_file_number_helper.dart:32:60 - unnecessary_string_interpolations
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\patients\data\patient_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\patients\patient_alerts_screen.dart:183:63 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:234:18 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:899:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:914:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:947:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:956:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:968:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:981:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\patient_detail_screen.dart:1546:13 - prefer_const_constructors
+warning - The declaration '_latestReferral' isn't referenced - lib\features\patients\patient_detail_screen.dart:1558:24 - unused_element
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\patients\patient_timeline_screen.dart:142:23 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_card.dart:41:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_card.dart:42:21 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_card.dart:43:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:39:25 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:40:23 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:41:25 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:153:19 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:155:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\patients\widgets\patient_compact_list_row.dart:155:32 - prefer_const_constructors
+   info - The 'children' argument should be last in widget constructor invocations - lib\features\patients\widgets\patient_profile_completion_banner.dart:38:9 - sort_child_properties_last
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\patients\widgets\quick_patient_create_dialog.dart:249:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\patients\widgets\quick_patient_create_dialog.dart:267:21 - deprecated_member_use
+   info - The 'children' argument should be last in widget constructor invocations - lib\features\patients\widgets\quick_patient_create_dialog.dart:299:23 - sort_child_properties_last
+warning - The '!' will have no effect because the receiver can't be null - lib\features\payments\data\payment_list_data_source.dart:28:51 - unnecessary_non_null_assertion
+   info - The constant name 'enjeksiyon_girisim' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:4:3 - constant_identifier_names
+   info - The constant name 'ameliyat_girisim_notu' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:5:3 - constant_identifier_names
+   info - The constant name 'fizyoterapi_seansi' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:6:3 - constant_identifier_names
+   info - The constant name 'rapor_belge' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:7:3 - constant_identifier_names
+   info - The constant name 'kredi_karti' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:11:29 - constant_identifier_names
+   info - The constant name 'havale_eft' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:11:42 - constant_identifier_names
+   info - The constant name 'kismi_odendi' isn't a lowerCamelCase identifier - lib\features\payments\models\payment_record.dart:13:30 - constant_identifier_names
+warning - Unused import: '../../core/data/repository_registry.dart' - lib\features\payments\payment_detail_screen.dart:3:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\payments\payment_list_screen.dart:135:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\payments\payment_list_screen.dart:158:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\payments\payment_list_screen.dart:181:21 - deprecated_member_use
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\payments\payment_list_screen.dart:289:21 - sort_child_properties_last
+warning - Unused import: 'data/pdf_output_repository.dart' - lib\features\pdf_outputs\pdf_output_detail_screen.dart:22:8 - unused_import
+warning - The value of the local variable 'patientLine' isn't used - lib\features\pdf_outputs\pdf_output_detail_screen.dart:133:11 - unused_local_variable
+   info - Use 'const' with the constructor to improve performance - lib\features\pdf_outputs\pdf_output_detail_screen.dart:146:13 - prefer_const_constructors
+warning - The '!' will have no effect because the receiver can't be null - lib\features\pdf_outputs\pdf_output_detail_screen.dart:421:26 - unnecessary_non_null_assertion
+warning - Unused import: '../../shared/widgets/clinical_notice.dart' - lib\features\pdf_outputs\pdf_output_form_screen.dart:8:8 - unused_import
+warning - Unused import: '../../shared/widgets/clinical_notice_tone.dart' - lib\features\pdf_outputs\pdf_output_form_screen.dart:9:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\pdf_outputs\pdf_output_list_screen.dart:161:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\pdf_outputs\pdf_output_list_screen.dart:191:21 - deprecated_member_use
+   info - Unnecessary braces in a string interpolation - lib\features\pdf_outputs\services\pdf_generator_service.dart:56:37 - unnecessary_brace_in_string_interps
+   info - Use 'const' with the constructor to improve performance - lib\features\pdf_outputs\services\templates\clinical_encounter_summary_pdf_template.dart:11:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\pdf_outputs\services\templates\clinical_encounter_summary_pdf_template.dart:12:30 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\pdf_outputs\services\templates\clinical_encounter_summary_pdf_template.dart:13:29 - prefer_const_constructors
+warning - Unused import: 'physiotherapy_referral_list_filters.dart' - lib\features\physiotherapy\data\mock_async_physiotherapy_referral_repository_adapter.dart:3:8 - unused_import
+warning - The receiver can't be 'null' because of short-circuiting, so the null-aware operator '?.' can't be used - lib\features\physiotherapy\data\supabase_physiotherapy_session_repository.dart:53:52 - invalid_null_aware_operator
+   info - The constant name 'doktor_degerlendirmesi_bekliyor' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_referral.dart:1:48 - constant_identifier_names
+   info - The constant name 'uygun_degil' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:2:3 - constant_identifier_names
+   info - The constant name 'agri_kontrolu' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:3:3 - constant_identifier_names
+   info - The constant name 'hareket_acikligi' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:4:3 - constant_identifier_names
+   info - The constant name 'kosuya_donus' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:6:3 - constant_identifier_names
+   info - The constant name 'saha_brans_calisma' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:7:3 - constant_identifier_names
+   info - The constant name 'temasli_antrenman' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:8:3 - constant_identifier_names
+   info - The constant name 'maca_donus' isn't a lowerCamelCase identifier - lib\features\physiotherapy\models\physiotherapy_session_note.dart:9:3 - constant_identifier_names
+   info - Use 'const' with the constructor to improve performance - lib\features\physiotherapy\screens\physiotherapy_referral_detail_screen.dart:164:11 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\physiotherapy\screens\physiotherapy_referral_detail_screen.dart:267:19 - deprecated_member_use
+   info - Don't use 'BuildContext's across async gaps - lib\features\physiotherapy\screens\physiotherapy_referral_form_screen.dart:152:9 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps - lib\features\physiotherapy\screens\physiotherapy_referral_form_screen.dart:164:11 - use_build_context_synchronously
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\physiotherapy\screens\physiotherapy_referral_form_screen.dart:302:33 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\physiotherapy\screens\physiotherapy_referral_list_screen.dart:100:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\physiotherapy\screens\physiotherapy_session_detail_screen.dart:109:13 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\physiotherapy\screens\physiotherapy_session_list_screen.dart:138:21 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\post_op_protocols\post_op_protocol_detail_screen.dart:28:14 - prefer_const_constructors
+warning - The value of the local variable 'patientLine' isn't used - lib\features\post_op_protocols\post_op_protocol_detail_screen.dart:43:11 - unused_local_variable
+   info - Use 'const' with the constructor to improve performance - lib\features\post_op_protocols\post_op_protocol_detail_screen.dart:63:13 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\post_op_protocols\post_op_protocol_list_screen.dart:80:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\post_op_protocols\post_op_protocol_list_screen.dart:103:21 - deprecated_member_use
+   info - The 'children' argument should be last in widget constructor invocations - lib\features\settings\clinic_settings_screen.dart:76:11 - sort_child_properties_last
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\clinic_settings_screen.dart:77:13 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\features\settings\clinic_settings_screen.dart:78:25 - prefer_const_literals_to_create_immutables
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\settings\clinic_workflow_settings_screen.dart:229:17 - deprecated_member_use
+warning - The member 'setMockInitialValues' can only be used within 'package:shared_preferences/src/shared_preferences_legacy.dart' or a test - lib\features\settings\data\mock_clinic_workflow_settings_repository.dart:38:25 - invalid_use_of_visible_for_testing_member
+warning - The member 'setMockInitialValues' can only be used within 'package:shared_preferences/src/shared_preferences_legacy.dart' or a test - lib\features\settings\data\mock_staff_leave_record_repository.dart:25:25 - invalid_use_of_visible_for_testing_member
+   info - Use 'const' for final variables initialized to a constant value - lib\features\settings\demo_usage_settings_content.dart:45:5 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\demo_usage_settings_content.dart:69:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\demo_usage_settings_content.dart:102:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\demo_usage_settings_screen.dart:11:12 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\patient_settings_screen.dart:30:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\patient_settings_screen.dart:37:9 - prefer_const_constructors
+   info - The 'children' argument should be last in widget constructor invocations - lib\features\settings\profile_settings_screen.dart:73:11 - sort_child_properties_last
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\saas_subscription_settings_content.dart:25:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\saas_subscription_settings_content.dart:33:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\saas_subscription_settings_content.dart:37:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\saas_subscription_settings_content.dart:41:9 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\settings\staff_leave_settings_screen.dart:517:17 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\system_security_settings_screen.dart:58:9 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\features\settings\system_security_settings_screen.dart:60:21 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\system_security_settings_screen.dart:61:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\system_security_settings_screen.dart:62:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:25:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:32:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:39:9 - prefer_const_constructors
+   info - Use 'const' literals as arguments to constructors of '@immutable' classes - lib\features\settings\users_roles_settings_screen.dart:41:21 - prefer_const_literals_to_create_immutables
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:42:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:43:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:44:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:45:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\settings\users_roles_settings_screen.dart:47:13 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\features\surgery\surgery_note_detail_screen.dart:29:14 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\surgery\surgery_note_list_screen.dart:67:21 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\surgery\surgery_note_list_screen.dart:90:21 - deprecated_member_use
+   info - Unnecessary braces in a string interpolation - lib\features\surgery\surgery_note_list_screen.dart:163:14 - unnecessary_brace_in_string_interps
+warning - Unused import: '../../patients/data/patient_timeline_builder.dart' - lib\features\timeline\data\mock_timeline_event_mapper.dart:1:8 - unused_import
+warning - Unused import: 'timeline_repository_failure.dart' - lib\features\timeline\data\timeline_event_mapper.dart:5:8 - unused_import
+   info - The imported package 'postgrest' isn't a dependency of the importing package - lib\features\timeline\data\timeline_repository_error_mapper.dart:1:8 - depend_on_referenced_packages
+   info - Use 'const' with the constructor to improve performance - lib\features\treatment\treatment_plan_detail_screen.dart:71:21 - prefer_const_constructors
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\treatment\treatment_plan_form_screen.dart:98:43 - deprecated_member_use
+   info - Use 'const' with the constructor to improve performance - lib\shared\legacy\legacy_archive_ui.dart:19:10 - prefer_const_constructors
+warning - Unused import: '../../core/constants/app_roles.dart' - lib\shared\models\app_user.dart:1:8 - unused_import
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\app_shell.dart:213:18 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\app_shell.dart:214:20 - prefer_const_constructors
+   info - Use 'const' for final variables initialized to a constant value - lib\shared\widgets\clinical_notice.dart:137:5 - prefer_const_declarations
+warning - Unused import: 'package:flutter/material.dart' - lib\shared\widgets\clinical_notice_tone.dart:1:8 - unused_import
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\date_time_chip.dart:43:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\form_screen_layout.dart:55:29 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\form_screen_layout.dart:57:27 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\form_screen_layout.dart:58:26 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - lib\shared\widgets\status_chip.dart:217:16 - prefer_const_constructors
+warning - The '!' will have no effect because the receiver can't be null - lib\shared\widgets\timeline_event_card.dart:104:61 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\shared\widgets\timeline_event_card.dart:107:38 - unnecessary_non_null_assertion
+warning - Unused import: 'package:v2mem_clinic/features/appointments/widgets/appointment_schedule_section.dart' - test\appointments\appointment_form_schedule_test.dart:7:8 - unused_import
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\appointments\appointment_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+   info - Use 'const' with the constructor to improve performance - test\appointments\appointment_repository_error_mapper_test.dart:10:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\appointments\appointment_repository_error_mapper_test.dart:17:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\appointments\appointment_repository_error_mapper_test.dart:24:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\auth_bootstrap_test.dart:114:11 - prefer_const_constructors
+   info - Unnecessary use of string interpolation - test\clinical\assistant_clinical_summary_display_test.dart:21:36 - unnecessary_string_interpolations
+   info - Unnecessary use of string interpolation - test\clinical\assistant_clinical_summary_display_test.dart:22:36 - unnecessary_string_interpolations
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\clinical\assistant_clinical_summary_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_form_ergonomics_test.dart:61:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_form_ergonomics_test.dart:78:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_form_ergonomics_test.dart:101:11 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_form_ergonomics_test.dart:108:11 - prefer_const_constructors
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\clinical\clinical_encounter_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_repository_error_mapper_test.dart:10:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_repository_error_mapper_test.dart:20:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_repository_error_mapper_test.dart:31:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\clinical\clinical_encounter_repository_error_mapper_test.dart:38:9 - prefer_const_constructors
+warning - Unused import: 'package:v2mem_clinic/features/clinical_encounter/data/clinical_body_region_mapping.dart' - test\clinical\clinical_encounter_search_helper_test.dart:2:8 - unused_import
+   info - Use 'const' for final variables initialized to a constant value - test\clinical\clinical_role_summary_repository_provider_test.dart:65:7 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - test\clinical\patient_selector_lock_selection_test.dart:15:20 - prefer_const_constructors
+   info - Unnecessary use of string interpolation - test\clinical\physiotherapist_clinical_summary_display_test.dart:29:35 - unnecessary_string_interpolations
+   info - Unnecessary use of string interpolation - test\clinical\physiotherapist_clinical_summary_display_test.dart:30:35 - unnecessary_string_interpolations
+   info - The local variable '_tenant' starts with an underscore - test\core\repository_cache_coordinator_test.dart:40:23 - no_leading_underscores_for_local_identifiers
+   info - Use 'const' with the constructor to improve performance - test\core\session\auth_session_supabase_tenant_test.dart:27:7 - prefer_const_constructors
+   info - The local variable '_quickActionLabels' starts with an underscore - test\dashboard\dashboard_quick_action_dedupe_test.dart:19:16 - no_leading_underscores_for_local_identifiers
+warning - Unused import: 'package:v2mem_clinic/features/appointments/data/async_appointment_repository_contract.dart' - test\dashboard\dashboard_workbench_data_source_test.dart:4:8 - unused_import
+warning - Unused import: 'package:v2mem_clinic/shared/widgets/status_chip.dart' - test\features\patients\patient_detail_clinical_rows_remote_reflection_test.dart:19:8 - unused_import
+warning - Unused import: 'package:v2mem_clinic/features/patients/models/patient.dart' - test\features\patients\quick_patient_create_data_source_test.dart:5:8 - unused_import
+warning - Unused import: 'package:v2mem_clinic/shared/widgets/clinical_list_row.dart' - test\features\pdf_outputs\pdf_output_list_row_test.dart:11:8 - unused_import
+warning - Unused import: 'package:v2mem_clinic/shared/widgets/status_chip.dart' - test\features\pdf_outputs\pdf_output_list_row_test.dart:14:8 - unused_import
+warning - A value for optional parameter 'throwOnAdd' isn't ever given - test\features\physiotherapy\referral_form_encounter_bridge_integration_test.dart:85:27 - unused_element_parameter
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:22:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:23:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:24:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:35:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:36:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_allowlist_test.dart:37:17 - prefer_const_constructors
+warning - The name SessionBootstrapStatus is shown, but isn't used - test\maintenance\maintenance_route_guard_test.dart:10:81 - unused_shown_name
+   info - Use 'const' with the constructor to improve performance - test\maintenance\maintenance_route_guard_test.dart:79:9 - prefer_const_constructors
+warning - Duplicate import - test\patient_files\mock_patient_file_metadata_repository_test.dart:5:8 - duplicate_import
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\patient_files\patient_file_metadata_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+warning - Unused import: 'package:v2mem_clinic/features/patient_files/data/patient_file_storage_repository.dart' - test\patient_files\patient_file_signed_url_service_test.dart:15:8 - unused_import
+   info - Use 'const' with the constructor to improve performance - test\patient_files\patient_file_signed_url_service_test.dart:89:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\patient_files\patient_file_upload_orchestrator_test.dart:98:35 - prefer_const_constructors
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\patient_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+   info - Use 'const' with the constructor to improve performance - test\patient_repository_error_mapper_test.dart:10:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\patient_repository_error_mapper_test.dart:20:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\patient_repository_error_mapper_test.dart:30:9 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\pdf_outputs\pdf_output_storage_orchestrator_test.dart:49:7 - prefer_const_constructors
+   info - Use 'const' for final variables initialized to a constant value - test\settings\persisted_schedule_config_source_test.dart:44:7 - prefer_const_declarations
+   info - Use 'const' for final variables initialized to a constant value - test\settings\persisted_schedule_config_source_test.dart:54:7 - prefer_const_declarations
+   info - Use 'const' with the constructor to improve performance - test\shared\clinical_list_row_test.dart:45:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\clinical_list_row_test.dart:46:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\clinical_list_row_test.dart:47:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:17:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:18:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:19:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:36:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:37:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:38:17 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:86:7 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:87:15 - prefer_const_constructors
+   info - Use 'const' with the constructor to improve performance - test\shared\filter_bar_collapsible_test.dart:88:17 - prefer_const_constructors
+   info - The imported package 'supabase' isn't a dependency of the importing package - test\timeline\supabase_timeline_repository_test.dart:11:8 - depend_on_referenced_packages
+   info - The imported package 'postgrest' isn't a dependency of the importing package - test\timeline\timeline_repository_error_mapper_test.dart:4:8 - depend_on_referenced_packages
+warning - Unused import: 'package:v2mem_clinic/features/timeline/data/timeline_repository.dart' - test\timeline\timeline_repository_provider_test.dart:8:8 - unused_import
+
+321 issues found. (ran in 17.2s)

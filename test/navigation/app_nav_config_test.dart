@@ -61,16 +61,31 @@ void main() {
       expect(routes, isNot(contains('/physiotherapy/clinical-summaries')));
     });
 
-    test('excludes timeline, tags, alerts, archive', () {
+    test('excludes timeline, tags, archive legacy routes', () {
       final routes = visibleNavRoutes();
       expect(routes, isNot(contains('/patient-timeline')));
       expect(routes, isNot(contains('/patient-tags')));
-      expect(routes, isNot(contains('/patient-alerts')));
       expect(routes, isNot(contains('/anamnesis')));
       expect(routes, isNot(contains('/examinations')));
       expect(routes, isNot(contains('/diagnoses')));
       expect(routes, isNot(contains('/treatment-plans')));
-      expect(routes, isNot(contains('/imaging')));
+    });
+
+    test('includes imaging, messages and clinical alerts', () {
+      final labels = visibleNavLabels();
+      final routes = visibleNavRoutes();
+      expect(labels, containsAll([
+        'Görüntüleme',
+        'Mesajlar',
+        'Mesaj Şablonları',
+        'Klinik Uyarılar',
+      ]));
+      expect(routes, containsAll([
+        '/imaging',
+        '/messages/sent',
+        '/messages/templates',
+        '/patient-alerts',
+      ]));
     });
 
     test('includes belgeler, klinik and system items', () {
@@ -99,19 +114,15 @@ void main() {
   group('Assistant sidebar cleanup', () {
     setUp(() => AuthSession.setUser(user(AppRoles.assistant)));
 
-    test('excludes timeline, tags, alerts, audit, full clinical', () {
+    test('includes diagnosis summary, messages, alerts and settings', () {
       final routes = visibleNavRoutes();
-      expect(routes, isNot(contains('/patient-timeline')));
-      expect(routes, isNot(contains('/patient-tags')));
-      expect(routes, isNot(contains('/patient-alerts')));
-      expect(routes, isNot(contains('/audit-logs')));
-      expect(routes, isNot(contains('/clinical-records')));
-    });
-
-    test('includes diagnosis summary and settings', () {
-      final routes = visibleNavRoutes();
+      final labels = visibleNavLabels();
       expect(routes, contains('/clinical-records/diagnosis-summary'));
+      expect(routes, contains('/messages/sent'));
+      expect(routes, contains('/patient-alerts'));
       expect(routes, contains('/settings'));
+      expect(labels, contains('Mesajlar'));
+      expect(labels, contains('Klinik Uyarılar'));
     });
   });
 

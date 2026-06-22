@@ -9,7 +9,6 @@ import 'package:v2mem_clinic/features/pdf_outputs/widgets/pdf_output_clinical_li
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_list_row.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_separated_list_body.dart';
-import 'package:v2mem_clinic/shared/widgets/pdf_document_card.dart';
 import 'package:v2mem_clinic/shared/widgets/status_chip.dart';
 
 void main() {
@@ -59,7 +58,6 @@ void main() {
 
     expect(find.byType(PdfOutputClinicalListRow), findsWidgets);
     expect(find.byType(ClinicalSeparatedListBody), findsWidgets);
-    expect(find.byType(PdfDocumentCard), findsNothing);
 
     for (final token in sensitive) {
       expect(find.textContaining(token), findsNothing);

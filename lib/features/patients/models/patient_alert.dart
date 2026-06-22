@@ -32,6 +32,7 @@ class PatientAlert {
   final bool isResolved;
   final DateTime? resolvedAt;
   final String createdBy;
+  final String? actionRoute;
 
   const PatientAlert({
     required this.id,
@@ -47,6 +48,7 @@ class PatientAlert {
     this.isResolved = false,
     this.resolvedAt,
     required this.createdBy,
+    this.actionRoute,
   });
 }
 

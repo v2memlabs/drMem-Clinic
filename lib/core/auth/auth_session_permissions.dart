@@ -51,15 +51,6 @@ abstract final class AuthSessionPermissions {
       _allow(TenantRoleAccessKey.viewClinicalDiagnosis);
   static bool get canViewClinicalTreatmentPlan =>
       _allow(TenantRoleAccessKey.viewClinicalTreatmentPlan);
-  static bool get canViewExaminationNotes => canViewExaminationDetails;
-  static bool get canEditExaminationNotes =>
-      _allow(TenantRoleAccessKey.editExaminationNotes);
-  static bool get canViewDiagnosis =>
-      _allow(TenantRoleAccessKey.viewClinicalEncounters);
-  static bool get canEditDiagnosis => _allow(TenantRoleAccessKey.editDiagnosis);
-  static bool get canViewTreatmentPlans => canViewTreatmentPlanDetails;
-  static bool get canEditTreatmentPlans =>
-      _allow(TenantRoleAccessKey.editTreatmentPlans);
   static bool get canViewImaging => _allow(TenantRoleAccessKey.viewImaging);
   static bool get canEditImaging => _allow(TenantRoleAccessKey.editImaging);
   static bool get canViewPdfOutputs => _allow(TenantRoleAccessKey.viewPdfOutputs);

@@ -101,10 +101,6 @@ class AuthSession {
       AuthSessionPermissions.canViewClinicalDiagnosisSummary;
   static bool get canViewAnamnesisDetails =>
       AuthSessionPermissions.canViewAnamnesisDetails;
-  static bool get canViewExaminationDetails =>
-      AuthSessionPermissions.canViewExaminationDetails;
-  static bool get canViewTreatmentPlanDetails =>
-      AuthSessionPermissions.canViewTreatmentPlanDetails;
   static bool get canViewClinicalSummary =>
       AuthSessionPermissions.canViewClinicalSummary;
   static bool get canViewClinicalDiagnosis =>
@@ -112,17 +108,6 @@ class AuthSession {
   static bool get canViewClinicalTreatmentPlan =>
       AuthSessionPermissions.canViewClinicalTreatmentPlan;
 
-  // --- Legacy arşiv modülleri ---
-  static bool get canViewExaminationNotes =>
-      AuthSessionPermissions.canViewExaminationNotes;
-  static bool get canEditExaminationNotes =>
-      AuthSessionPermissions.canEditExaminationNotes;
-  static bool get canViewDiagnosis => AuthSessionPermissions.canViewDiagnosis;
-  static bool get canEditDiagnosis => AuthSessionPermissions.canEditDiagnosis;
-  static bool get canViewTreatmentPlans =>
-      AuthSessionPermissions.canViewTreatmentPlans;
-  static bool get canEditTreatmentPlans =>
-      AuthSessionPermissions.canEditTreatmentPlans;
   static bool get canViewImaging => AuthSessionPermissions.canViewImaging;
   static bool get canEditImaging => AuthSessionPermissions.canEditImaging;
   static bool get canViewPdfOutputs => AuthSessionPermissions.canViewPdfOutputs;

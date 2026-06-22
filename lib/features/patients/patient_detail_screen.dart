@@ -324,7 +324,10 @@ class _PatientDetailLoadedView extends StatefulWidget {
       !AuthSession.canViewClinicalEncounters &&
       ClinicalSummaryModuleAvailability.assistantOperational;
 
-  static bool get _showsRehabShort => AuthSession.canViewClinicalEncounters;
+  static bool get _showsRehabShort =>
+      AuthSession.canViewClinicalEncounters ||
+      (AuthSession.canViewPhysiotherapy &&
+          !AuthSession.canViewClinicalEncounters);
 
   @override
   State<_PatientDetailLoadedView> createState() =>
@@ -818,6 +821,10 @@ class _PatientRoleShortSummary extends StatelessWidget {
     if (AuthSession.canViewClinicalDiagnosisSummary) {
       return _assistantSummaryRows();
     }
+    if (AuthSession.canViewPhysiotherapy &&
+        !AuthSession.canViewClinicalEncounters) {
+      return _physioSummaryRows();
+    }
     return _nurseSummaryRows();
   }
 
@@ -900,6 +907,18 @@ class _PatientRoleShortSummary extends StatelessWidget {
       ),
       InfoSectionRow('Son başvuru', _formatDate(patient.lastVisitDate)),
       InfoSectionRow('Muayene özeti', recordLine),
+      InfoSectionRow('İletişim', patient.phone),
+    ];
+  }
+
+  List<InfoSectionRow> _physioSummaryRows() {
+    return [
+      InfoSectionRow(
+        'Operasyonel durum',
+        'FTR yönlendirme ve seans takibi',
+        emphasize: true,
+      ),
+      InfoSectionRow('Son başvuru', _formatDate(patient.lastVisitDate)),
       InfoSectionRow('İletişim', patient.phone),
     ];
   }

@@ -74,6 +74,16 @@ void main() {
     expect(find.text('Yeni Randevu'), findsNothing);
   });
 
+  testWidgets('doctor and physio see rehab summary card on patient detail',
+      (tester) async {
+    await pumpPatientDetail(tester, AppRoles.doctor);
+    expect(find.text('Rehabilitasyon Özeti'), findsOneWidget);
+
+    await pumpPatientDetail(tester, AppRoles.physiotherapist);
+    expect(find.text('Rehabilitasyon Özeti'), findsOneWidget);
+    expect(find.text('Hasta bağlamı'), findsNothing);
+  });
+
   testWidgets('nurse does not see appointment header shortcuts', (tester) async {
     await pumpPatientDetail(tester, AppRoles.nurse);
 

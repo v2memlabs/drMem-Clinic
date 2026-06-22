@@ -226,6 +226,48 @@ List<AppNavItem> _belgelerNavItems({required bool doctorDocuments}) => [
           route: '/pdf-outputs',
           visible: () => AuthSession.canViewPdfOutputs,
         ),
+      AppNavItem(
+        label: 'Görüntüleme',
+        icon: Icons.image_search_outlined,
+        route: '/imaging',
+        visible: () => AuthSession.canViewImaging,
+      ),
+    ];
+
+List<AppNavItem> _mesajlarNavItems() => [
+      AppNavItem(
+        label: 'Mesajlar',
+        icon: Icons.mail_outline,
+        route: '/messages/sent',
+        visible: () => AuthSession.canViewMessages,
+      ),
+      AppNavItem(
+        label: 'Mesaj Şablonları',
+        icon: Icons.text_snippet_outlined,
+        route: '/messages/templates',
+        visible: () => AuthSession.canViewMessageTemplates,
+      ),
+    ];
+
+List<AppNavSection> _mesajlarSection() {
+  final items = _mesajlarNavItems().where((item) => item.visible()).toList();
+  if (items.isEmpty) return const <AppNavSection>[];
+  return [
+    AppNavSection(
+      title: 'Mesajlar',
+      dividerBefore: true,
+      items: items,
+    ),
+  ];
+}
+
+List<AppNavItem> _klinikUyariNavItems() => [
+      AppNavItem(
+        label: 'Klinik Uyarılar',
+        icon: Icons.warning_amber_outlined,
+        route: '/patient-alerts',
+        visible: () => AuthSession.canViewPatientAlerts,
+      ),
     ];
 
 List<AppNavSection> _doctorSections() {
@@ -275,6 +317,7 @@ List<AppNavSection> _doctorSections() {
       title: 'Belgeler',
       items: _belgelerNavItems(doctorDocuments: true),
     ),
+    ..._mesajlarSection(),
     AppNavSection(
       title: 'Sistem',
       items: [
@@ -284,6 +327,7 @@ List<AppNavSection> _doctorSections() {
           route: '/audit-logs',
           visible: () => AuthSession.canViewAuditLogs,
         ),
+        ..._klinikUyariNavItems(),
         AppNavItem(
           label: 'Ayarlar',
           icon: Icons.settings,
@@ -332,10 +376,12 @@ List<AppNavSection> _assistantSections() {
       title: 'Belgeler',
       items: _belgelerNavItems(doctorDocuments: false),
     ),
+    ..._mesajlarSection(),
     AppNavSection(
       hideTitle: true,
       dividerBefore: true,
       items: [
+        ..._klinikUyariNavItems(),
         AppNavItem(
           label: 'Ayarlar',
           icon: Icons.settings,

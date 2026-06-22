@@ -72,23 +72,3 @@ class ResponsiveDetailPage extends StatelessWidget {
     );
   }
 }
-
-/// Detay section kartları — tek kolon, Post-op ile aynı aralık.
-@Deprecated('Use ClinicalStackedSections instead')
-class ResponsiveSectionColumns extends StatelessWidget {
-  final List<Widget> children;
-  final double twoColumnMinWidth;
-  final double spacing;
-
-  const ResponsiveSectionColumns({
-    super.key,
-    required this.children,
-    this.twoColumnMinWidth = AppBreakpoints.detailTwoColumn,
-    this.spacing = AppSpacing.sm,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClinicalStackedSections(children: children);
-  }
-}

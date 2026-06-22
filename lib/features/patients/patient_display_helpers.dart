@@ -191,9 +191,4 @@ abstract final class PatientDisplayHelpers {
     if (parts.isEmpty) return null;
     return parts.join(' · ');
   }
-
-  static List<String> visibleTagChips(Patient patient, {int max = 2}) {
-    if (patient.tags.isEmpty) return const [];
-    return patient.tags.take(max).toList();
-  }
 }

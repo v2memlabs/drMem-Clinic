@@ -144,4 +144,27 @@ class MessageRepository {
       sentMessageMatchesQuery(m, q);
 
   void addSentMessage(SentMessage message) => mockSentMessages.insert(0, message);
+
+  MessageTemplate createTemplate(MessageTemplate template) {
+    final saved = MessageTemplate(
+      id: 'tmpl-${DateTime.now().millisecondsSinceEpoch}',
+      title: template.title,
+      channel: template.channel,
+      category: template.category,
+      content: template.content,
+      createdBy: template.createdBy.trim().isEmpty ? 'Kullanıcı' : template.createdBy,
+      isActive: template.isActive,
+    );
+    mockMessageTemplates.insert(0, saved);
+    return saved;
+  }
+
+  MessageTemplate updateTemplate(MessageTemplate template) {
+    final index = mockMessageTemplates.indexWhere((t) => t.id == template.id);
+    if (index < 0) {
+      throw StateError('Message template not found');
+    }
+    mockMessageTemplates[index] = template;
+    return template;
+  }
 }

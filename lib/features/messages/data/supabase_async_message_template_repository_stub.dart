@@ -29,4 +29,10 @@ class SupabaseAsyncMessageTemplateRepositoryStub
 
   @override
   Future<List<MessageTemplate>> search(String query) async => throw _error;
+
+  @override
+  Future<MessageTemplate> create(MessageTemplate template) async => throw _error;
+
+  @override
+  Future<MessageTemplate> update(MessageTemplate template) async => throw _error;
 }

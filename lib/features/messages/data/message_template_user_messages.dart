@@ -2,6 +2,7 @@ import 'message_template_repository_failure.dart';
 
 abstract final class MessageTemplateUserMessages {
   static const genericLoadFailure = 'Mesaj şablonları yüklenemedi.';
+  static const genericSaveFailure = 'Mesaj şablonu kaydedilemedi.';
   static const notFound = 'Mesaj şablonu bulunamadı.';
 
   static String forFailure(MessageTemplateRepositoryFailure reason) {

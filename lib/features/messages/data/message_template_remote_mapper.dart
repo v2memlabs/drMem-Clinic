@@ -36,6 +36,35 @@ abstract final class MessageTemplateRemoteMapper {
     return value;
   }
 
+  static Map<String, dynamic> toInsertRow({
+    required String tenantId,
+    required MessageTemplate template,
+    String? createdByProfileId,
+    String? createdByDisplay,
+  }) {
+    return {
+      'tenant_id': tenantId,
+      'title': template.title.trim(),
+      'channel': template.channel.name,
+      'category': template.category.name,
+      'content': template.content.trim(),
+      'is_active': template.isActive,
+      if (createdByProfileId != null) 'created_by': createdByProfileId,
+      if (createdByDisplay?.trim().isNotEmpty == true)
+        'created_by_display': createdByDisplay!.trim(),
+    };
+  }
+
+  static Map<String, dynamic> toUpdateRow(MessageTemplate template) {
+    return {
+      'title': template.title.trim(),
+      'channel': template.channel.name,
+      'category': template.category.name,
+      'content': template.content.trim(),
+      'is_active': template.isActive,
+    };
+  }
+
   static T _enumFromDb<T extends Enum>(List<T> values, Object? raw) {
     final name = raw?.toString().trim();
     if (name == null || name.isEmpty) {

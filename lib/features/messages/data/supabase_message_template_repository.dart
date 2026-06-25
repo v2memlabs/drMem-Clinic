@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/config/supabase_env_config.dart';
 import '../../../core/data/backend_config.dart';
 import '../../../core/session/active_tenant_context_store.dart';
+import '../../../core/session/active_tenant_context_sync.dart';
 import '../models/message_template.dart';
 import 'async_message_template_repository_contract.dart';
 import 'message_repository.dart';
@@ -47,6 +48,28 @@ class SupabaseMessageTemplateRepository
       rethrow;
     } catch (e) {
       throw MessageTemplateRepositoryErrorMapper.toException(e);
+    }
+  }
+
+  String? _ownerProfileId() {
+    final id = ActiveTenantContextStore.current?.profile.userId;
+    if (id == null || id.trim().isEmpty) return null;
+    return id.trim();
+  }
+
+  String? _ownerDisplayName() {
+    final name = ActiveTenantContextStore.current?.profile.displayName;
+    if (name == null || name.trim().isEmpty) return null;
+    return name.trim();
+  }
+
+  Future<void> _syncTenantForWrite() async {
+    try {
+      await ActiveTenantContextSync.ensureSyncedBeforeWrite();
+    } on ActiveTenantContextSyncException {
+      throw const MessageTemplateRepositoryException(
+        MessageTemplateRepositoryFailure.noActiveTenant,
+      );
     }
   }
 
@@ -141,5 +164,62 @@ class SupabaseMessageTemplateRepository
     }
 
     return List<MessageTemplate>.from(list);
+  }
+
+  @override
+  Future<MessageTemplate> create(MessageTemplate template) async {
+    return _guard(() async {
+      await _syncTenantForWrite();
+      final tenantId = _requireTenantId();
+      final row = MessageTemplateRemoteMapper.toInsertRow(
+        tenantId: tenantId,
+        template: template,
+        createdByProfileId: _ownerProfileId(),
+        createdByDisplay: _ownerDisplayName() ?? template.createdBy,
+      );
+
+      final inserted = await _client
+          .from(MessageTemplateRemoteMapper.table)
+          .insert(row)
+          .select(MessageTemplateRemoteMapper.listSelectColumns)
+          .single();
+
+      return MessageTemplateRemoteMapper.fromRow(
+        Map<String, dynamic>.from(inserted),
+      );
+    });
+  }
+
+  @override
+  Future<MessageTemplate> update(MessageTemplate template) async {
+    return _guard(() async {
+      await _syncTenantForWrite();
+      final tenantId = _requireTenantId();
+      final id = template.id.trim();
+      if (id.isEmpty) {
+        throw const MessageTemplateRepositoryException(
+          MessageTemplateRepositoryFailure.notFound,
+        );
+      }
+
+      final updated = await _client
+          .from(MessageTemplateRemoteMapper.table)
+          .update(MessageTemplateRemoteMapper.toUpdateRow(template))
+          .eq('id', id)
+          .eq('tenant_id', tenantId)
+          .isFilter('deleted_at', null)
+          .select(MessageTemplateRemoteMapper.listSelectColumns)
+          .maybeSingle();
+
+      if (updated == null) {
+        throw const MessageTemplateRepositoryException(
+          MessageTemplateRepositoryFailure.notFound,
+        );
+      }
+
+      return MessageTemplateRemoteMapper.fromRow(
+        Map<String, dynamic>.from(updated),
+      );
+    });
   }
 }

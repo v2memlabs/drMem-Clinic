@@ -15,4 +15,8 @@ abstract interface class AsyncMessageTemplateRepositoryContract {
   });
 
   Future<List<MessageTemplate>> search(String query);
+
+  Future<MessageTemplate> create(MessageTemplate template);
+
+  Future<MessageTemplate> update(MessageTemplate template);
 }

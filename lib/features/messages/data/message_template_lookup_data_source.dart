@@ -15,7 +15,9 @@ abstract final class MessageTemplateLookupDataSource {
 
   static Future<List<MessageTemplate>> listAll() async {
     try {
-      return await RepositoryRegistry.messageTemplatesAsync.getAll();
+      return await RepositoryRegistry.messageTemplatesAsync.getFiltered(
+        activeOnly: true,
+      );
     } catch (_) {
       return const [];
     }

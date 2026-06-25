@@ -56,6 +56,7 @@ import '../../features/consents/consent_template_prepare_screen.dart';
 import '../../features/consents/consent_template_form_screen.dart';
 import '../../features/consents/first_visit_consent_wizard_screen.dart';
 import '../../features/messages/message_template_list_screen.dart';
+import '../../features/messages/message_template_form_screen.dart';
 import '../../features/messages/sent_message_list_screen.dart';
 import '../../features/messages/message_send_screen.dart';
 import '../../features/messages/sent_message_detail_screen.dart';
@@ -1178,6 +1179,26 @@ class AppRouter {
         builder: (context, state) {
           if (!AuthSession.canViewPayments) return _deny('Ödeme detayına bu rol ile erişilemez.');
           return PaymentDetailScreen(id: state.pathParameters['id']!);
+        },
+      ),
+      GoRoute(
+        path: '/messages/templates/new',
+        builder: (context, state) {
+          if (!AuthSession.canViewMessageTemplates) {
+            return _deny('Mesaj şablonu oluşturmaya yalnızca doktor erişebilir.');
+          }
+          return const MessageTemplateFormScreen();
+        },
+      ),
+      GoRoute(
+        path: '/messages/templates/:id/edit',
+        builder: (context, state) {
+          if (!AuthSession.canViewMessageTemplates) {
+            return _deny('Mesaj şablonu düzenlemeye yalnızca doktor erişebilir.');
+          }
+          return MessageTemplateFormScreen(
+            templateId: state.pathParameters['id'],
+          );
         },
       ),
       GoRoute(

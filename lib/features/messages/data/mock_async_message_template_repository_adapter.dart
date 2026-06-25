@@ -1,4 +1,5 @@
 import '../models/message_template.dart';
+import 'message_template_repository_failure.dart';
 import 'async_message_template_repository_contract.dart';
 import 'message_repository.dart';
 
@@ -34,4 +35,19 @@ class MockAsyncMessageTemplateRepositoryAdapter
   @override
   Future<List<MessageTemplate>> search(String query) async =>
       _sync.searchTemplates(query);
+
+  @override
+  Future<MessageTemplate> create(MessageTemplate template) async =>
+      _sync.createTemplate(template);
+
+  @override
+  Future<MessageTemplate> update(MessageTemplate template) async {
+    try {
+      return _sync.updateTemplate(template);
+    } catch (_) {
+      throw const MessageTemplateRepositoryException(
+        MessageTemplateRepositoryFailure.notFound,
+      );
+    }
+  }
 }

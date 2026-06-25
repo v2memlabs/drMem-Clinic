@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/auth/auth_session.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/layout/responsive_page_body.dart';
 import '../../shared/widgets/app_shell.dart';
@@ -11,7 +12,9 @@ import '../../shared/widgets/list_filters_row.dart';
 import '../../shared/widgets/page_header.dart';
 import 'data/message_template_list_data_source.dart';
 import 'data/message_template_list_load_result.dart';
+import 'data/message_template_list_refresh.dart';
 import 'data/message_template_user_messages.dart';
+import 'data/message_template_repository_provider.dart';
 import 'models/message_template.dart';
 
 class MessageTemplateListScreen extends StatefulWidget {
@@ -26,12 +29,16 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
   String _query = '';
   Channel? _channelFilter;
   Category? _categoryFilter;
+  bool _activeOnly = true;
   late Future<MessageTemplateListLoadResult> _loadFuture;
+  bool _activatedOnce = false;
+  int _lastRefreshVersion = MessageTemplateListRefresh.version;
 
   int get _activeFilterCount {
     var n = 0;
     if (_channelFilter != null) n++;
     if (_categoryFilter != null) n++;
+    if (!_activeOnly) n++;
     return n;
   }
 
@@ -41,19 +48,37 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
     _reload();
   }
 
+  @override
+  void activate() {
+    super.activate();
+    if (!_activatedOnce) {
+      _activatedOnce = true;
+      return;
+    }
+    if (MessageTemplateListRefresh.isStale(_lastRefreshVersion)) {
+      _reload();
+    }
+  }
+
   void _reload() {
+    MessageTemplateRepositoryProvider.resetCache();
+    _lastRefreshVersion = MessageTemplateListRefresh.version;
     setState(() {
       _loadFuture = MessageTemplateListDataSource.load(
         query: _query,
         channelEnumFilter: _channelFilter,
         categoryEnumFilter: _categoryFilter,
+        activeOnly: _activeOnly,
       );
     });
   }
 
   void _clearFilters() {
-    _channelFilter = null;
-    _categoryFilter = null;
+    setState(() {
+      _channelFilter = null;
+      _categoryFilter = null;
+      _activeOnly = true;
+    });
     _reload();
   }
 
@@ -78,11 +103,13 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
               collapsible: true,
               activeFilterCount: _activeFilterCount,
               onClearFilters: _activeFilterCount > 0 ? _clearFilters : null,
-              trailing: FilledButton.icon(
-                onPressed: () => context.push('/messages/send'),
-                icon: const Icon(Icons.send_outlined),
-                label: const Text('Mesaj Hazırla'),
-              ),
+              trailing: AuthSession.canViewMessageTemplates
+                  ? FilledButton.icon(
+                      onPressed: () => context.push('/messages/templates/new'),
+                      icon: const Icon(Icons.add_outlined),
+                      label: const Text('Yeni Şablon'),
+                    )
+                  : null,
               filters: [
                 ListFiltersRow(
                   fields: [
@@ -102,7 +129,7 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
                         ),
                       ],
                       onChanged: (v) {
-                        _channelFilter = v;
+                        setState(() => _channelFilter = v);
                         _reload();
                       },
                     ),
@@ -122,11 +149,19 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
                         ),
                       ],
                       onChanged: (v) {
-                        _categoryFilter = v;
+                        setState(() => _categoryFilter = v);
                         _reload();
                       },
                     ),
                   ],
+                ),
+                FilterChip(
+                  label: const Text('Sadece aktif şablonlar'),
+                  selected: _activeOnly,
+                  onSelected: (v) {
+                    setState(() => _activeOnly = v);
+                    _reload();
+                  },
                 ),
               ],
             ),
@@ -171,6 +206,13 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
         icon: Icons.message_outlined,
         title: 'Mesaj şablonu bulunamadı',
         description: 'Arama veya filtre kriterlerinizi değiştirin.',
+        action: AuthSession.canViewMessageTemplates
+            ? FilledButton.icon(
+                onPressed: () => context.push('/messages/templates/new'),
+                icon: const Icon(Icons.add_outlined),
+                label: const Text('Yeni Şablon'),
+              )
+            : null,
       );
     }
 
@@ -189,6 +231,9 @@ class _MessageTemplateListScreenState extends State<MessageTemplateListScreen> {
       chips: [
         t.isActive ? 'Aktif' : 'Pasif',
       ],
+      onTap: AuthSession.canViewMessageTemplates
+          ? () => context.push('/messages/templates/${t.id}/edit')
+          : null,
     );
   }
 }

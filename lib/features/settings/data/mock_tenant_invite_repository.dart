@@ -1,4 +1,6 @@
 import '../../../core/auth/auth_session.dart';
+import '../../../core/auth/login_username_generator.dart';
+import '../../../core/auth/mock_must_change_password_registry.dart';
 import '../../../core/auth/tenant_role_mapper.dart';
 import '../../../core/session/active_tenant_context_store.dart';
 import '../models/tenant_membership_user.dart';
@@ -43,6 +45,8 @@ class MockTenantInviteRepository implements TenantInviteRepository {
 
     final email = request.email.trim();
     final displayName = request.displayName.trim();
+    final loginUsername =
+        LoginUsernameGenerator.normalize(request.loginUsername.trim());
     if (email.isEmpty || !email.contains('@')) {
       throw TenantInviteRepositoryException(
         TenantInviteFailure.invalidEmail,
@@ -53,6 +57,18 @@ class MockTenantInviteRepository implements TenantInviteRepository {
       throw TenantInviteRepositoryException(
         TenantInviteFailure.invalidDisplayName,
         TenantInviteErrorMapper.messageFor(TenantInviteFailure.invalidDisplayName),
+      );
+    }
+    if (!LoginUsernameGenerator.isValid(loginUsername)) {
+      throw TenantInviteRepositoryException(
+        TenantInviteFailure.invalidLoginUsername,
+        TenantInviteErrorMapper.messageFor(TenantInviteFailure.invalidLoginUsername),
+      );
+    }
+    if (request.initialPassword.trim().length < 8) {
+      throw TenantInviteRepositoryException(
+        TenantInviteFailure.invalidPassword,
+        TenantInviteErrorMapper.messageFor(TenantInviteFailure.invalidPassword),
       );
     }
     if (!TenantRoleMapper.isKnownDbRole(request.role)) {
@@ -77,32 +93,24 @@ class MockTenantInviteRepository implements TenantInviteRepository {
           ),
         );
       }
-      if (existing.status == 'invited' && existing.role == request.role) {
-        MockTenantMembershipStore.markInvited(existing.membershipId);
-        return TenantInviteResult(
-          operationResult: 'invitation_already_pending',
-          targetMembershipId: existing.membershipId,
-          role: existing.role,
-          status: 'invited',
-        );
-      }
 
       MockTenantMembershipStore.members[existingIndex] = TenantMembershipUser(
         membershipId: existing.membershipId,
         displayName: displayName,
         email: email,
+        loginUsername: loginUsername,
         role: request.role,
-        status: 'invited',
+        status: 'active',
         createdAt: existing.createdAt,
         updatedAt: DateTime.now(),
       );
-      MockTenantMembershipStore.markInvited(existing.membershipId);
+      MockMustChangePasswordRegistry.markRequired(loginUsername);
 
       return TenantInviteResult(
-        operationResult: existing.status == 'disabled' ? 'reinvited' : 'created',
+        operationResult: 'reactivated',
         targetMembershipId: existing.membershipId,
         role: request.role,
-        status: 'invited',
+        status: 'active',
       );
     }
 
@@ -112,19 +120,20 @@ class MockTenantInviteRepository implements TenantInviteRepository {
         membershipId: membershipId,
         displayName: displayName,
         email: email,
+        loginUsername: loginUsername,
         role: request.role,
-        status: 'invited',
+        status: 'active',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
     );
-    MockTenantMembershipStore.markInvited(membershipId);
+    MockMustChangePasswordRegistry.markRequired(loginUsername);
 
     return TenantInviteResult(
       operationResult: 'created',
       targetMembershipId: membershipId,
       role: request.role,
-      status: 'invited',
+      status: 'active',
     );
   }
 

@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../auth/auth_password_paths.dart';
 import '../auth/supabase_web_auth_callback_uri.dart';
+import '../auth/auth_password_paths.dart';
+import '../auth/must_change_password_gate.dart';
 import '../auth/invitation_deep_link.dart';
 import '../auth/auth_session.dart';
 import '../auth/session_bootstrap.dart';
@@ -140,6 +142,12 @@ abstract final class AuthRouteGuard {
   ) {
     if (InvitationDeepLink.isAcceptPath(location)) return null;
     if (AuthPasswordPaths.isPublicPasswordPath(location)) return null;
+
+    if (MustChangePasswordGate.isRequired &&
+        !AuthPasswordPaths.isUpdatePasswordPath(location)) {
+      return AuthPasswordPaths.updatePasswordPath;
+    }
+
     if (onLogin) return AuthSession.dashboardRoute;
     if (location == initializingPath || location == accountNoAccessPath) {
       return AuthSession.dashboardRoute;

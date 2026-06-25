@@ -1,9 +1,10 @@
 export interface InviteRequest {
-  mode?: "invite" | "resend";
+  mode?: "invite" | "provision" | "resend";
   email?: string;
   display_name?: string;
   login_username?: string;
   role?: string;
+  password?: string;
   membership_id?: string;
   redirect_url?: string;
 }

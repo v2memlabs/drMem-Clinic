@@ -61,20 +61,21 @@ void main() {
       ],
     );
 
-    await tester.binding.setSurfaceSize(const Size(900, 1200));
+    await tester.binding.setSurfaceSize(const Size(900, 1400));
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
   }
 
-  testWidgets('invite form renders fields and role labels', (tester) async {
+  testWidgets('create user form renders fields and role labels', (tester) async {
     await pumpScreen(tester);
 
-    expect(find.text('Kullanıcı Davet Et'), findsWidgets);
+    expect(find.text('Yeni Kullanıcı'), findsWidgets);
     expect(find.text('E-posta'), findsOneWidget);
     expect(find.text('Görünen ad'), findsOneWidget);
     expect(find.text('Giriş kullanıcı adı'), findsOneWidget);
+    expect(find.text('Başlangıç şifresi'), findsOneWidget);
     expect(find.text('Rol'), findsOneWidget);
-    expect(find.text('Davet gönder'), findsOneWidget);
+    expect(find.text('Kullanıcı oluştur'), findsOneWidget);
     expect(find.text('Doktor'), findsWidgets);
     expect(find.text('Asistan'), findsWidgets);
   });
@@ -82,24 +83,26 @@ void main() {
   testWidgets('validation shows safe error for empty email', (tester) async {
     await pumpScreen(tester);
 
-    await tester.tap(find.text('Davet gönder'));
+    await tester.tap(find.text('Kullanıcı oluştur'));
     await tester.pumpAndSettle();
 
     expect(find.text('Geçerli bir e-posta adresi girin.'), findsOneWidget);
   });
 
-  testWidgets('successful invite returns to previous route', (tester) async {
+  testWidgets('successful create returns to previous route', (tester) async {
     await pumpScreen(tester);
 
     await tester.enterText(find.byType(TextField).at(0), 'yeni@test.local');
     await tester.enterText(find.byType(TextField).at(1), 'Yeni Kullanıcı');
-    await tester.tap(find.text('Davet gönder'));
+    await tester.enterText(find.byType(TextField).at(3), 'Baslangic123');
+    await tester.enterText(find.byType(TextField).at(4), 'Baslangic123');
+    await tester.tap(find.text('Kullanıcı oluştur'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Kullanıcı Davet Et'), findsNothing);
+    expect(find.text('Yeni Kullanıcı'), findsNothing);
     expect(
       MockTenantMembershipStore.members.any(
-        (m) => m.email == 'yeni@test.local' && m.status == 'invited',
+        (m) => m.email == 'yeni@test.local' && m.status == 'active',
       ),
       isTrue,
     );

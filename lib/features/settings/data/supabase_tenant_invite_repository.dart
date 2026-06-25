@@ -128,11 +128,12 @@ class SupabaseTenantInviteRepository implements TenantInviteRepository {
 
     try {
       final payload = await _invokeFunction({
-        'mode': 'invite',
+        'mode': 'provision',
         'email': request.email.trim(),
         'display_name': request.displayName.trim(),
         'login_username': request.loginUsername.trim(),
         'role': request.role,
+        'password': request.initialPassword,
       });
       return TenantInviteResult.fromJson(payload);
     } on TenantInviteRepositoryException {

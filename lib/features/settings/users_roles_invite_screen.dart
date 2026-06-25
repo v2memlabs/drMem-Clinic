@@ -23,9 +23,13 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
   final _emailCtrl = TextEditingController();
   final _displayNameCtrl = TextEditingController();
   final _loginUsernameCtrl = TextEditingController();
+  final _passwordCtrl = TextEditingController();
+  final _confirmPasswordCtrl = TextEditingController();
   String _role = TenantRoleMapper.dbAssistantSecretary;
   bool _submitting = false;
   bool _loginUsernameTouched = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
   String? _errorMessage;
 
   static const _roles = [
@@ -47,6 +51,8 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
     _emailCtrl.dispose();
     _displayNameCtrl.dispose();
     _loginUsernameCtrl.dispose();
+    _passwordCtrl.dispose();
+    _confirmPasswordCtrl.dispose();
     super.dispose();
   }
 
@@ -64,6 +70,8 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
     final displayName = _displayNameCtrl.text.trim();
     final loginUsername =
         LoginUsernameGenerator.normalize(_loginUsernameCtrl.text.trim());
+    final password = _passwordCtrl.text;
+    final confirm = _confirmPasswordCtrl.text;
 
     if (email.isEmpty || !email.contains('@')) {
       setState(() => _errorMessage = 'Geçerli bir e-posta adresi girin.');
@@ -76,6 +84,16 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
     if (!LoginUsernameGenerator.isValid(loginUsername)) {
       setState(() => _errorMessage =
           'Giriş kullanıcı adı 3–32 karakter olmalı (a-z, 0-9, . _)');
+      return;
+    }
+    if (password.length < 8) {
+      setState(
+        () => _errorMessage = 'Başlangıç şifresi en az 8 karakter olmalıdır.',
+      );
+      return;
+    }
+    if (password != confirm) {
+      setState(() => _errorMessage = 'Şifreler eşleşmiyor.');
       return;
     }
 
@@ -91,11 +109,12 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
           displayName: displayName,
           loginUsername: loginUsername,
           role: _role,
+          initialPassword: password,
         ),
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Davet gönderildi.')),
+        const SnackBar(content: Text('Kullanıcı oluşturuldu.')),
       );
       context.pop(true);
     } on TenantInviteRepositoryException catch (e) {
@@ -107,7 +126,7 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _errorMessage = 'Davet gönderilemedi. Lütfen tekrar deneyin.';
+        _errorMessage = 'Kullanıcı oluşturulamadı. Lütfen tekrar deneyin.';
         _submitting = false;
       });
     }
@@ -118,16 +137,16 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
 
     return SettingsSubpageScaffold(
-      title: 'Kullanıcı Davet Et',
+      title: 'Yeni Kullanıcı',
       icon: Icons.person_add_outlined,
       children: [
         const SettingsShellNote(
           message:
-              'Davet e-postasında giriş kullanıcı adı yer alır. Kullanıcı şifresini '
-              'belirledikten sonra kullanıcı adı ve şifre bilgilendirme e-postası gönderilir.',
+              'Kullanıcı adı, e-posta ve başlangıç şifresini siz belirlersiniz. '
+              'Kullanıcı ilk girişte şifresini değiştirmek zorundadır.',
         ),
         SettingsSectionCard(
-          title: 'Davet bilgileri',
+          title: 'Hesap bilgileri',
           children: [
             TextField(
               controller: _emailCtrl,
@@ -176,6 +195,50 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
                       if (value != null) setState(() => _role = value);
                     },
             ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: _passwordCtrl,
+              obscureText: _obscurePassword,
+              decoration: InputDecoration(
+                labelText: 'Başlangıç şifresi',
+                helperText: 'En az 8 karakter; kullanıcıya iletin',
+                suffixIcon: IconButton(
+                  tooltip: _obscurePassword ? 'Göster' : 'Gizle',
+                  onPressed: _submitting
+                      ? null
+                      : () => setState(() => _obscurePassword = !_obscurePassword),
+                  icon: Icon(
+                    _obscurePassword
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                ),
+              ),
+              enabled: !_submitting,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: _confirmPasswordCtrl,
+              obscureText: _obscureConfirm,
+              decoration: InputDecoration(
+                labelText: 'Başlangıç şifresi (tekrar)',
+                suffixIcon: IconButton(
+                  tooltip: _obscureConfirm ? 'Göster' : 'Gizle',
+                  onPressed: _submitting
+                      ? null
+                      : () => setState(() => _obscureConfirm = !_obscureConfirm),
+                  icon: Icon(
+                    _obscureConfirm
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                ),
+              ),
+              enabled: !_submitting,
+              onSubmitted: (_) {
+                if (!_submitting) _submit();
+              },
+            ),
             if (_errorMessage != null) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(
@@ -194,12 +257,11 @@ class _UsersRolesInviteScreenState extends State<UsersRolesInviteScreen> {
                       width: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Davet gönder'),
+                  : const Text('Kullanıcı oluştur'),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Davet e-postası gönderildikten sonra kullanıcı listesinde '
-              '“Davetli” olarak görünür.',
+              'Oluşturulan kullanıcı hemen aktif olur; davet kaydı oluşturulmaz.',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
             ),
           ],

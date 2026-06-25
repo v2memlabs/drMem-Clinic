@@ -14,6 +14,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_shadows.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/auth/auth_password_paths.dart';
+import '../../core/auth/must_change_password_gate.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -79,6 +80,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (!mounted) return;
+
+    if (!_isMockMode && MustChangePasswordGate.isRequired) {
+      context.go(AuthPasswordPaths.updatePasswordPath);
+      return;
+    }
+
     context.go(AuthSession.dashboardRoute);
   }
 

@@ -7,6 +7,7 @@ enum TenantInviteFailure {
   invalidDisplayName,
   invalidRole,
   invalidLoginUsername,
+  invalidPassword,
   loginUsernameTaken,
   authInviteFailed,
   authUserExists,

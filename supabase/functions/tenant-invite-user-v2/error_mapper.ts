@@ -28,7 +28,14 @@ export function mapRpcError(message?: string | null): string {
     return "profile_conflict";
   }
   if (msg.includes("auth_user_not_found")) return "auth_invite_failed";
+  if (msg.includes("auth_user_exists")) return "auth_user_exists";
   return "database_bootstrap_failed";
+}
+
+export function mapPasswordValidation(raw?: string | null): string | null {
+  const password = raw?.trim() ?? "";
+  if (password.length < 8) return "invalid_password";
+  return null;
 }
 
 export function mapAuthError(message?: string | null): string {

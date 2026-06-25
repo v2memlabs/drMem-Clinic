@@ -48,7 +48,7 @@ void main() {
     MockTenantMembershipStore.reset();
   });
 
-  test('mock invite adds invited member to shared store', () async {
+  test('mock create user adds active member to shared store', () async {
     final repo = TenantInviteRepositoryProvider.repository;
     final result = await repo.inviteUser(
       const TenantInviteRequest(
@@ -56,13 +56,14 @@ void main() {
         displayName: 'Yeni Kullanıcı',
         loginUsername: 'yenikullanici',
         role: TenantRoleMapper.dbNurse,
+        initialPassword: 'Baslangic123',
       ),
     );
 
-    expect(result.status, 'invited');
+    expect(result.status, 'active');
     expect(
       MockTenantMembershipStore.members.any(
-        (m) => m.email == 'yeni@ornek.klinik' && m.status == 'invited',
+        (m) => m.email == 'yeni@ornek.klinik' && m.status == 'active',
       ),
       isTrue,
     );

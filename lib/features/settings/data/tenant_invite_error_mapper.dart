@@ -20,6 +20,8 @@ abstract final class TenantInviteErrorMapper {
         return TenantInviteFailure.invalidRole;
       case 'invalid_login_username':
         return TenantInviteFailure.invalidLoginUsername;
+      case 'invalid_password':
+        return TenantInviteFailure.invalidPassword;
       case 'login_username_taken':
         return TenantInviteFailure.loginUsernameTaken;
       case 'auth_invite_failed':
@@ -105,6 +107,8 @@ abstract final class TenantInviteErrorMapper {
         return 'Geçersiz rol seçimi.';
       case TenantInviteFailure.invalidLoginUsername:
         return 'Giriş kullanıcı adı 3–32 karakter olmalı (a-z, 0-9, . _)';
+      case TenantInviteFailure.invalidPassword:
+        return 'Başlangıç şifresi en az 8 karakter olmalıdır.';
       case TenantInviteFailure.loginUsernameTaken:
         return 'Bu kullanıcı adı zaten kullanılıyor.';
       case TenantInviteFailure.authInviteFailed:

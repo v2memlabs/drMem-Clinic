@@ -28,8 +28,12 @@ void main() {
     expect(toml, contains('verify_jwt = true'));
   });
 
-  test('function supports invite and resend modes', () {
+  test('function supports provision, invite and resend modes', () {
     final source = index.readAsStringSync();
+    expect(source, contains('mode === "provision"'));
+    expect(source, contains('handleProvisionMode'));
+    expect(source, contains('bootstrap_tenant_provisioned_user_v2'));
+    expect(source, contains('must_change_password'));
     expect(source, contains("mode === \"resend\""));
     expect(source, contains('prepare_tenant_invitation_resend_v2'));
     expect(source, contains('complete_tenant_invitation_resend_v2'));

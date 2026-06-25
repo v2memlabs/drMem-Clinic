@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../auth/invitation_deep_link.dart';
 import '../auth/auth_session.dart';
 import 'auth_route_guard.dart';
+import 'settings_route_guard.dart';
 import '../../features/system/account_access_status_screen.dart';
 import '../../features/system/session_initializing_screen.dart';
 import '../../shared/widgets/access_denied_screen.dart';
@@ -267,108 +268,96 @@ class AppRouter {
       GoRoute(
         path: '/clinic-workflow',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Klinik işleyiş ayarlarına erişim yetkiniz yok.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const ClinicWorkflowSettingsScreen();
         },
       ),
       GoRoute(
         path: '/staff-leave-requests',
         builder: (context, state) {
-          if (!AuthSession.canRequestStaffLeave) {
-            return _deny('İzin talebine erişim yetkiniz yok.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const StaffLeaveRequestScreen();
         },
       ),
       GoRoute(
         path: '/staff-leaves',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Personel izinlerine erişim yetkiniz yok.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const StaffLeaveSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const SettingsHubScreen();
         },
       ),
       GoRoute(
         path: '/settings/profile',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const ProfileSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/clinic',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const ClinicSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/display-region',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const DisplayRegionSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/clinic-workflow',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const ClinicWorkflowSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/clinic-workflow/staff-leaves',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const StaffLeaveSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/patient-settings',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const PatientSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/users-roles',
         builder: (context, state) {
-          if (!AuthSession.canEditClinicProfile) {
-            return _deny('Kullanıcılar ve roller yalnızca doktor hesabı tarafından yönetilebilir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const UsersRolesSettingsScreen();
         },
         routes: [
           GoRoute(
             path: 'invite',
             builder: (context, state) {
-              if (!AuthSession.canEditClinicProfile) {
-                return _deny('Kullanıcı daveti yalnızca doktor hesabı tarafından gönderilebilir.');
-              }
+              final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+              if (deny != null) return _deny(deny);
               return const UsersRolesInviteScreen();
             },
           ),
@@ -377,36 +366,32 @@ class AppRouter {
       GoRoute(
         path: '/settings/system-security',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const SystemSecuritySettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/clinic-finance',
         builder: (context, state) {
-          if (!clinicFinanceStatisticsVisible()) {
-            return _deny('Finansal istatistiklere yalnızca klinik yönetimi erişebilir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const ClinicFinanceStatisticsScreen();
         },
       ),
       GoRoute(
         path: '/settings/demo-usage',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const DemoUsageSettingsScreen();
         },
       ),
       GoRoute(
         path: '/settings/subscription',
         builder: (context, state) {
-          if (!AuthSession.canViewSettings) {
-            return _deny('Ayarlar için giriş yapmanız gerekir.');
-          }
+          final deny = SettingsRouteGuard.denyMessageForPath(state.location);
+          if (deny != null) return _deny(deny);
           return const SaasSubscriptionSettingsScreen();
         },
       ),

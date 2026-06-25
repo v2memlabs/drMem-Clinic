@@ -192,112 +192,10 @@ class _UsersRolesSettingsScreenState extends State<UsersRolesSettingsScreen> {
     }
   }
 
-  Future<void> _openInviteForm() async {
-    final invited = await context.push<bool>('/settings/users-roles/invite');
-    if (invited == true && mounted) {
+  Future<void> _openCreateUserForm() async {
+    final created = await context.push<bool>('/settings/users-roles/invite');
+    if (created == true && mounted) {
       await _load();
-    }
-  }
-
-  Future<void> _resendInvitation(TenantMembershipUser member) async {
-    if (!_canEditMember(member) || member.status != 'invited') return;
-
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Daveti yeniden gönder'),
-        content: Text(
-          '${member.displayName} kullanıcısına davet e-postası yeniden gönderilsin mi?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('İptal'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Gönder'),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true) return;
-
-    setState(() => _saving = true);
-    try {
-      await TenantInviteRepositoryProvider.repository.resendInvitation(
-        member.membershipId,
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Davet yeniden gönderildi.')),
-      );
-      await _load();
-    } on TenantInviteRepositoryException catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('İşlem tamamlanamadı. Lütfen tekrar deneyin.'),
-        ),
-      );
-    } finally {
-      if (mounted) setState(() => _saving = false);
-    }
-  }
-
-  Future<void> _cancelInvitation(TenantMembershipUser member) async {
-    if (!_canEditMember(member) || member.status != 'invited') return;
-
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Daveti iptal et'),
-        content: const Text(
-          'Bu davet iptal edilecek. Kullanıcı hesabı silinmeyecek.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Vazgeç'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Daveti iptal et'),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true) return;
-
-    setState(() => _saving = true);
-    try {
-      await TenantInviteRepositoryProvider.repository.cancelInvitation(
-        member.membershipId,
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Davet iptal edildi.')),
-      );
-      await _load();
-    } on TenantInviteRepositoryException catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('İşlem tamamlanamadı. Lütfen tekrar deneyin.'),
-        ),
-      );
-    } finally {
-      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -400,13 +298,11 @@ class _UsersRolesSettingsScreenState extends State<UsersRolesSettingsScreen> {
                     onEditRole: () => _editRole(member),
                     onEditLoginUsername: () => _editLoginUsername(member),
                     onEditStatus: () => _editStatus(member),
-                    onResendInvitation: () => _resendInvitation(member),
-                    onCancelInvitation: () => _cancelInvitation(member),
                   )),
             const SizedBox(height: AppSpacing.sm),
             OutlinedButton(
-              onPressed: _loading || _saving ? null : _openInviteForm,
-              child: const Text('Kullanıcı davet et'),
+              onPressed: _loading || _saving ? null : _openCreateUserForm,
+              child: const Text('Yeni kullanıcı'),
             ),
           ],
         ),
@@ -424,8 +320,6 @@ class _MemberTile extends StatelessWidget {
   final VoidCallback onEditRole;
   final VoidCallback onEditLoginUsername;
   final VoidCallback onEditStatus;
-  final VoidCallback onResendInvitation;
-  final VoidCallback onCancelInvitation;
 
   const _MemberTile({
     required this.member,
@@ -436,8 +330,6 @@ class _MemberTile extends StatelessWidget {
     required this.onEditRole,
     required this.onEditLoginUsername,
     required this.onEditStatus,
-    required this.onResendInvitation,
-    required this.onCancelInvitation,
   });
 
   @override
@@ -498,7 +390,7 @@ class _MemberTile extends StatelessWidget {
               ] else if (member.status == 'invited') ...[
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  'Davetli kullanıcı yalnızca daveti kabul ederek aktif olur.',
+                  'Eski davet kaydı — kullanıcıyı yeniden oluşturun veya durumu güncelleyin.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
                 ),
               ],
@@ -519,16 +411,6 @@ class _MemberTile extends StatelessWidget {
                     onPressed: canEdit ? onEditStatus : null,
                     child: const Text('Durumu düzenle'),
                   ),
-                  if (member.status == 'invited' && canEdit) ...[
-                    OutlinedButton(
-                      onPressed: onResendInvitation,
-                      child: const Text('Yeniden gönder'),
-                    ),
-                    OutlinedButton(
-                      onPressed: onCancelInvitation,
-                      child: const Text('Daveti iptal et'),
-                    ),
-                  ],
                 ],
               ),
             ],

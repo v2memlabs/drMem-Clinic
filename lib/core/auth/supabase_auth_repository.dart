@@ -9,6 +9,7 @@ import '../data/repository_registry.dart';
 import '../session/auth_session_bridge.dart';
 import '../session/session_readiness.dart';
 import 'invitation_acceptance.dart';
+import 'must_change_password_gate.dart';
 import 'pending_invitation_store.dart';
 import 'auth_bootstrap_mapper.dart';
 import 'auth_failure_reason.dart';
@@ -143,6 +144,8 @@ class SupabaseAuthRepository implements AuthRepositoryContract {
         await _abortAuthenticatedSignIn();
         return AuthSignInResult.failure(AuthFailureReason.membershipUnavailable);
       }
+
+      MustChangePasswordGate.markRequiredFromSession();
 
       final ctx = bootstrap.context!;
       final user = AppUser(

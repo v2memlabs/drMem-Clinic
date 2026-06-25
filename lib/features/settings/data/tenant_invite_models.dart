@@ -1,15 +1,17 @@
-/// Settings invitation v2a/v2b — invite/accept/resend/cancel models.
+/// Klinik kullanıcı oluşturma — admin şifre belirler, davet kaydı yok.
 class TenantInviteRequest {
   final String email;
   final String displayName;
   final String loginUsername;
   final String role;
+  final String initialPassword;
 
   const TenantInviteRequest({
     required this.email,
     required this.displayName,
     required this.loginUsername,
     required this.role,
+    required this.initialPassword,
   });
 }
 
@@ -34,7 +36,7 @@ class TenantInviteResult {
       targetProfileId: json['target_profile_id'] as String?,
       targetMembershipId: json['target_membership_id'] as String?,
       role: json['role'] as String? ?? 'assistant_secretary',
-      status: json['status'] as String? ?? 'invited',
+      status: json['status'] as String? ?? 'active',
     );
   }
 }

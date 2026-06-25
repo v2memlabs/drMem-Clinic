@@ -2,7 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient, SupabaseClient } from "jsr:@supabase/supabase-js@2";
 import { buildCorsHeaders } from "../_shared/cors.ts";
 import type { InviteRequest, InviteResponse, ResendContext } from "./types.ts";
-import { mapAuthError, mapRpcError } from "./error_mapper.ts";
+import { mapAuthError, mapPasswordValidation, mapRpcError } from "./error_mapper.ts";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VALID_ROLES = new Set([
@@ -380,6 +380,122 @@ async function handleInviteMode(
   });
 }
 
+function validateProvisionRequest(body: InviteRequest): string | null {
+  const base = validateInviteRequest(body);
+  if (base) return base;
+  return mapPasswordValidation(body.password);
+}
+
+async function handleProvisionMode(
+  req: Request,
+  userClient: SupabaseClient,
+  adminClient: SupabaseClient,
+  body: InviteRequest,
+): Promise<Response> {
+  const validationError = validateProvisionRequest(body);
+  if (validationError) {
+    return jsonResponse(req, { ok: false, error: validationError }, 400);
+  }
+
+  const email = body.email!.trim();
+  const displayName = body.display_name!.trim();
+  const loginUsername = normalizeLoginUsername(body.login_username!);
+  const role = body.role!;
+  const password = body.password!.trim();
+  const targetMembershipId = crypto.randomUUID();
+
+  const existingAuthId = await findAuthUserIdByEmail(adminClient, email);
+  if (existingAuthId) {
+    return jsonResponse(req, { ok: false, error: "auth_user_exists" }, 409);
+  }
+
+  const { data: createdUser, error: createError } = await adminClient.auth.admin
+    .createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        display_name: displayName,
+        must_change_password: true,
+      },
+    });
+
+  if (createError || !createdUser.user) {
+    console.error(
+      "auth createUser failed",
+      redactForLog(createError?.message ?? "unknown"),
+    );
+    return jsonResponse(req, { ok: false, error: mapAuthError(createError?.message) }, 502);
+  }
+
+  const authUserId = createdUser.user.id;
+
+  const { data: bootstrapData, error: bootstrapError } = await userClient.rpc(
+    "bootstrap_tenant_provisioned_user_v2",
+    {
+      p_auth_user_id: authUserId,
+      p_email: email,
+      p_display_name: displayName,
+      p_role: role,
+      p_target_membership_id: targetMembershipId,
+    },
+  );
+
+  if (bootstrapError || bootstrapData?.ok !== true) {
+    console.error(
+      "provision bootstrap RPC failed",
+      redactForLog(bootstrapError?.message ?? bootstrapData),
+    );
+
+    const { error: deleteError } = await adminClient.auth.admin.deleteUser(
+      authUserId,
+    );
+    if (deleteError) {
+      console.error("rollback deleteUser failed", deleteError.message);
+      return jsonResponse(req, { ok: false, error: "rollback_failed" }, 500);
+    }
+
+    const mapped = mapRpcError(bootstrapError?.message);
+    return jsonResponse(req, { ok: false, error: mapped }, 502);
+  }
+
+  const profileId = bootstrapData.target_profile_id as string;
+  const usernameResult = await setProfileLoginUsername(
+    userClient,
+    profileId,
+    loginUsername,
+  );
+
+  if (!usernameResult.ok) {
+    const { error: deleteError } = await adminClient.auth.admin.deleteUser(
+      authUserId,
+    );
+    if (deleteError) {
+      console.error("rollback deleteUser failed", deleteError.message);
+      return jsonResponse(req, { ok: false, error: "rollback_failed" }, 500);
+    }
+    return jsonResponse(req, { ok: false, error: usernameResult.error }, 409);
+  }
+
+  console.log(
+    "tenant provision success",
+    redactForLog({
+      operation_result: bootstrapData.operation_result,
+      target_profile_id: bootstrapData.target_profile_id,
+      target_membership_id: bootstrapData.target_membership_id,
+    }),
+  );
+
+  return jsonResponse(req, {
+    ok: true,
+    operation_result: bootstrapData.operation_result ?? "created",
+    target_profile_id: bootstrapData.target_profile_id,
+    target_membership_id: bootstrapData.target_membership_id,
+    role: bootstrapData.role,
+    status: bootstrapData.status,
+  });
+}
+
 async function handleResendMode(
   req: Request,
   userClient: SupabaseClient,
@@ -516,13 +632,16 @@ Deno.serve(async (req) => {
     auth: { persistSession: false, autoRefreshToken: false },
   });
 
-  const mode = body.mode ?? "invite";
+  const mode = body.mode ?? "provision";
   if (mode === "resend") {
     return handleResendMode(req, userClient, adminClient, body, supabaseUrl, serviceRoleKey);
   }
-  if (mode !== "invite") {
-    return jsonResponse(req,{ ok: false, error: "invalid_arguments" }, 400);
+  if (mode === "provision") {
+    return handleProvisionMode(req, userClient, adminClient, body);
+  }
+  if (mode === "invite") {
+    return handleInviteMode(req, userClient, adminClient, body, supabaseUrl, serviceRoleKey);
   }
 
-  return handleInviteMode(req, userClient, adminClient, body, supabaseUrl, serviceRoleKey);
+  return jsonResponse(req, { ok: false, error: "invalid_arguments" }, 400);
 });

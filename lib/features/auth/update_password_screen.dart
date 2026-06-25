@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/auth/auth_password_setup_intent.dart';
+import '../../core/auth/must_change_password_gate.dart';
 import '../../core/auth/supabase_auth_url_session.dart';
 import '../../core/auth/auth_session.dart';
 import '../../core/auth/invitation_acceptance.dart';
@@ -103,9 +104,19 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
     final newPassword = _passwordCtrl.text;
 
     try {
-      await Supabase.instance.client.auth.updateUser(
-        UserAttributes(password: newPassword),
-      );
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user != null && MustChangePasswordGate.readsRequired(user)) {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(
+            password: newPassword,
+            data: MustChangePasswordGate.clearedMetadata(user),
+          ),
+        );
+      } else {
+        await Supabase.instance.client.auth.updateUser(
+          UserAttributes(password: newPassword),
+        );
+      }
       AuthPasswordSetupIntent.clear();
       if (!mounted) return;
       await _continueAfterPassword(session.user.id);
@@ -192,9 +203,11 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
     final muted = Theme.of(context).colorScheme.onSurfaceVariant;
     final hasSession = AppBackendConfig.isSupabase &&
         Supabase.instance.client.auth.currentSession != null;
+    final firstLoginChange = MustChangePasswordGate.isRequired &&
+        PendingInvitationStore.membershipId == null;
 
     return AuthPasswordFormScaffold(
-      title: 'Şifre belirle',
+      title: firstLoginChange ? 'İlk giriş — şifre değiştir' : 'Şifre belirle',
       icon: Icons.lock_outline,
       body: _recoveringSession
           ? const Column(
@@ -210,14 +223,18 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Klinik hesabınız için yeni bir şifre oluşturun.',
+                  firstLoginChange
+                      ? 'Güvenlik için ilk girişte yeni bir şifre belirlemeniz gerekir.'
+                      : 'Klinik hesabınız için yeni bir şifre oluşturun.',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted),
                   textAlign: TextAlign.center,
                 ),
                 if (!hasSession) ...[
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    'Geçerli bir davet veya kurtarma bağlantısı gerekir.',
+                    firstLoginChange
+                        ? 'Oturum bulunamadı. Lütfen tekrar giriş yapın.'
+                        : 'Geçerli bir kurtarma bağlantısı gerekir.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Theme.of(context).colorScheme.error,
                         ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_session.dart';
+import '../../shared/widgets/clinical_notice.dart';
+import '../../shared/widgets/clinical_notice_tone.dart';
+import '../../shared/widgets/clinical_snack_bar.dart';
 import '../../shared/widgets/app_shell.dart';
 import '../../shared/widgets/form_screen_layout.dart';
 import '../../shared/widgets/form_section_card.dart';
@@ -100,30 +103,28 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
     return null;
   }
 
+  String get _sentByDisplay =>
+      AuthSession.currentUser?.displayName.trim().isNotEmpty == true
+          ? AuthSession.currentUser!.displayName.trim()
+          : 'Kullanıcı';
+
   Future<void> _saveAsSent({
     required SendStatus status,
     required String templateTitle,
   }) async {
     if (_selectedPatientId == null || _selectedPatientId!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lütfen hasta seçin.')),
-      );
+      showClinicalSnackBar(context, 'Lütfen hasta seçin.', isError: true);
       return;
     }
 
     final patient = await PatientLookupDataSource.findById(_selectedPatientId!);
     if (!mounted) return;
     if (patient == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Lütfen hasta seçin.')),
-      );
+      showClinicalSnackBar(context, 'Lütfen hasta seçin.', isError: true);
       return;
     }
 
-    final sentBy =
-        AuthSession.currentUser?.displayName.trim().isNotEmpty == true
-            ? AuthSession.currentUser!.displayName.trim()
-            : 'Asistan';
+    final sentBy = _sentByDisplay;
 
     final trimmedContent = content.trim();
     final preview = trimmedContent.length > 200
@@ -157,9 +158,7 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
       );
     } on SentMessageFormException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
+      showClinicalSnackBar(context, e.message, isError: true);
       return;
     }
 
@@ -167,10 +166,8 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
     final successText = status == SendStatus.gonderildi
         ? 'Gönderim kaydı oluşturuldu.'
         : 'Gönderim başarısız olarak kaydedildi.';
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(successText)),
-    );
-    context.push('/messages/sent');
+    showClinicalSnackBar(context, successText);
+    context.go('/messages/sent');
   }
 
   Future<String> _resolveTemplateTitle() async {
@@ -205,9 +202,7 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
       email: _emailController.text,
     );
     if (recipientError != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(recipientError)),
-      );
+      showClinicalSnackBar(context, recipientError, isError: true);
       return;
     }
 
@@ -237,12 +232,10 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
     setState(() => _saving = false);
 
     if (!launched) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            MessageChannelLaunchFailure.launchFailed.userMessage,
-          ),
-        ),
+      showClinicalSnackBar(
+        context,
+        MessageChannelLaunchFailure.launchFailed.userMessage,
+        isError: true,
       );
     }
 
@@ -256,7 +249,7 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.push('/messages/sent');
+      context.go('/messages/sent');
     }
   }
 
@@ -290,14 +283,12 @@ class _MessageSendScreenState extends State<MessageSendScreen> {
                             leadingBack: true,
                             fallbackRoute: '/messages/sent',
                           ),
-                          Card(
-                            color: Colors.yellow[100],
-                            child: const Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Text(
+                          ClinicalNotice(
+                            tone: ClinicalNoticeTone.warning,
+                            title: 'KVKK / onam',
+                            message:
                                 'Klinik ve kişisel sağlık verisi içeren mesajlar yalnızca gerekli durumlarda, uygun onam ve yetki kapsamında gönderilmelidir.',
-                              ),
-                            ),
+                            dense: true,
                           ),
                           FormSectionCard(
                             title: 'Hasta ve İletişim',

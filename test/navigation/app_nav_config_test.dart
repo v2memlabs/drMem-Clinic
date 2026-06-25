@@ -88,6 +88,23 @@ void main() {
       ]));
     });
 
+    test('messages nav highlights only one item per route', () {
+      final sentItem = _navItemForRoute('/messages/sent');
+      final templatesItem = _navItemForRoute('/messages/templates');
+
+      expect(isNavItemActive('/messages/sent', sentItem), isTrue);
+      expect(isNavItemActive('/messages/sent', templatesItem), isFalse);
+
+      expect(isNavItemActive('/messages/send', sentItem), isTrue);
+      expect(isNavItemActive('/messages/send', templatesItem), isFalse);
+
+      expect(isNavItemActive('/messages/templates', templatesItem), isTrue);
+      expect(isNavItemActive('/messages/templates', sentItem), isFalse);
+
+      expect(isNavItemActive('/messages/templates/new', templatesItem), isTrue);
+      expect(isNavItemActive('/messages/templates/new', sentItem), isFalse);
+    });
+
     test('includes belgeler, klinik and system items', () {
       final labels = visibleNavLabels();
       final routes = visibleNavRoutes();
@@ -123,6 +140,21 @@ void main() {
       expect(routes, contains('/settings'));
       expect(labels, contains('Mesajlar'));
       expect(labels, contains('Klinik Uyarılar'));
+    });
+
+    test('includes belgeler modules allowed for assistant role', () {
+      final labels = visibleNavLabels();
+      final routes = visibleNavRoutes();
+      expect(labels, containsAll([
+        'Reçeteler',
+        'Raporlar',
+        'PDF Çıktıları',
+      ]));
+      expect(routes, containsAll([
+        '/prescriptions',
+        '/clinical-reports',
+        '/pdf-outputs',
+      ]));
     });
   });
 
@@ -173,4 +205,13 @@ void main() {
       expect(label.toLowerCase(), isNot(contains('admin')));
     });
   });
+}
+
+AppNavItem _navItemForRoute(String route) {
+  for (final section in buildAppNavSections()) {
+    for (final item in section.items) {
+      if (item.route == route) return item;
+    }
+  }
+  throw StateError('Nav item not found for $route');
 }

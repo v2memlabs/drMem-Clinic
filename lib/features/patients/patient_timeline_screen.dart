@@ -96,14 +96,7 @@ class _PatientTimelineScreenState extends State<PatientTimelineScreen> {
     final route = TimelineEventNavigation.routeFor(event);
     if (route != null && route.isNotEmpty) {
       context.push(route);
-      return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(TimelineListUserMessages.navigationUnavailable),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
   }
 
   @override

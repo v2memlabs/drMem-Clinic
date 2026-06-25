@@ -88,7 +88,7 @@ class _AssistantDashboardScreenState extends State<AssistantDashboardScreen> {
 
   List<DashboardQuickAction> _quickActions() {
     return DashboardQuickActionList.filterAllowed([
-      if (AuthSession.canViewAppointments)
+      if (AuthSession.canEditAppointments)
         const DashboardQuickAction(
           icon: Icons.event_available_outlined,
           label: 'Yeni Randevu',

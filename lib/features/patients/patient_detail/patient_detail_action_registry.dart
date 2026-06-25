@@ -149,14 +149,14 @@ abstract final class PatientDetailActionRegistry {
       id: PatientDetailActionIds.newAppointment,
       label: 'Yeni randevu',
       icon: Icons.event_available_outlined,
-      isVisible: (_) => AuthSession.canViewAppointments,
+      isVisible: (_) => AuthSession.canEditAppointments,
       routeBuilder: (ctx) => '/appointments/new${ctx.patientQuery}',
     ),
     PatientDetailAction(
       id: PatientDetailActionIds.ftrAppointment,
       label: 'FTR randevusu',
       icon: Icons.healing_outlined,
-      isVisible: (_) => AuthSession.canViewAppointments,
+      isVisible: (_) => AuthSession.canBookReferralAppointments,
       routeBuilder: (ctx) =>
           '/appointments/new?patientId=${ctx.patientId}&type=fizikTedavi',
     ),

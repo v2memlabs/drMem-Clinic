@@ -405,10 +405,11 @@ class _AppointmentDetailLoadedViewState
         icon: Icons.folder_outlined,
         onPressed: () => context.push('/patients/${appointment.patientId}'),
       ),
-      DetailAction(
-        label: DetailActionLabels.appointmentCreate,
-        onPressed: () => context.push('/appointments/new$patientQuery'),
-      ),
+      if (AuthSession.canEditAppointments)
+        DetailAction(
+          label: DetailActionLabels.appointmentCreate,
+          onPressed: () => context.push('/appointments/new$patientQuery'),
+        ),
     ]);
 
     return actions;

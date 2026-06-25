@@ -192,21 +192,19 @@ List<AppNavSection> _yonlendirmeIstemSection({bool includeFtr = false}) {
   ];
 }
 
-List<AppNavItem> _belgelerNavItems({required bool doctorDocuments}) => [
-      if (doctorDocuments)
-        AppNavItem(
-          label: 'Reçeteler',
-          icon: Icons.medication_outlined,
-          route: '/prescriptions',
-          visible: () => AuthSession.canViewPrescriptions,
-        ),
-      if (doctorDocuments)
-        AppNavItem(
-          label: 'Raporlar',
-          icon: Icons.description_outlined,
-          route: '/clinical-reports',
-          visible: () => AuthSession.canViewClinicalReports,
-        ),
+List<AppNavItem> _belgelerNavItems() => [
+      AppNavItem(
+        label: 'Reçeteler',
+        icon: Icons.medication_outlined,
+        route: '/prescriptions',
+        visible: () => AuthSession.canViewPrescriptions,
+      ),
+      AppNavItem(
+        label: 'Raporlar',
+        icon: Icons.description_outlined,
+        route: '/clinical-reports',
+        visible: () => AuthSession.canViewClinicalReports,
+      ),
       AppNavItem(
         label: 'Dosyalar',
         icon: Icons.folder,
@@ -219,13 +217,12 @@ List<AppNavItem> _belgelerNavItems({required bool doctorDocuments}) => [
         route: '/consents',
         visible: () => AuthSession.canViewConsents,
       ),
-      if (doctorDocuments)
-        AppNavItem(
-          label: 'PDF Çıktıları',
-          icon: Icons.picture_as_pdf_outlined,
-          route: '/pdf-outputs',
-          visible: () => AuthSession.canViewPdfOutputs,
-        ),
+      AppNavItem(
+        label: 'PDF Çıktıları',
+        icon: Icons.picture_as_pdf_outlined,
+        route: '/pdf-outputs',
+        visible: () => AuthSession.canViewPdfOutputs,
+      ),
       AppNavItem(
         label: 'Görüntüleme',
         icon: Icons.image_search_outlined,
@@ -315,7 +312,7 @@ List<AppNavSection> _doctorSections() {
     ),
     AppNavSection(
       title: 'Belgeler',
-      items: _belgelerNavItems(doctorDocuments: true),
+      items: _belgelerNavItems(),
     ),
     ..._mesajlarSection(),
     AppNavSection(
@@ -374,7 +371,7 @@ List<AppNavSection> _assistantSections() {
     ),
     AppNavSection(
       title: 'Belgeler',
-      items: _belgelerNavItems(doctorDocuments: false),
+      items: _belgelerNavItems(),
     ),
     ..._mesajlarSection(),
     AppNavSection(
@@ -549,11 +546,12 @@ bool isNavItemActive(String location, AppNavItem item) {
 
   if (currentPath.startsWith('$itemPath/')) return true;
 
-  if (itemPath == '/messages/templates') {
-    return currentPath.startsWith('/messages');
+  if (itemPath == '/messages/sent') {
+    return currentPath.startsWith('/messages/sent') ||
+        currentPath.startsWith('/messages/send');
   }
-  if (itemPath == '/messages/send') {
-    return currentPath.startsWith('/messages/send') || currentPath.startsWith('/messages/sent');
+  if (itemPath == '/messages/templates') {
+    return currentPath.startsWith('/messages/templates');
   }
   if (itemPath == '/clinical-records/diagnosis-summary') {
     return currentPath.startsWith('/clinical-records/diagnosis-summary');

@@ -68,9 +68,6 @@ class MessageRepository {
     return false;
   }
 
-  bool _templateMatchesQuery(MessageTemplate t, String q) =>
-      templateMatchesQuery(t, q);
-
   // --- Gönderim kayıtları ---
 
   List<SentMessage> getSentMessages() => List.unmodifiable(mockSentMessages);
@@ -139,9 +136,6 @@ class MessageRepository {
     if (m.notes.toLowerCase().contains(q)) return true;
     return false;
   }
-
-  bool _sentMessageMatchesQuery(SentMessage m, String q) =>
-      sentMessageMatchesQuery(m, q);
 
   void addSentMessage(SentMessage message) => mockSentMessages.insert(0, message);
 

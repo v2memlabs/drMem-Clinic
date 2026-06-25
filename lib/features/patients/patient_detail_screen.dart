@@ -622,7 +622,7 @@ List<Widget> _buildPatientDetailHeaderActions(
 
   if (AuthSession.canViewClinicalDiagnosisSummary &&
       !AuthSession.canViewClinicalEncounters &&
-      AuthSession.canViewAppointments) {
+      AuthSession.canEditAppointments) {
     return [
       _compactPatientHeaderButton(
         label: 'Yeni Randevu',

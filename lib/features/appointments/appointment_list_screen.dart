@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/auth/auth_session.dart';
 import '../../core/data/repository_registry.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/layout/responsive_page_body.dart';
@@ -337,11 +338,13 @@ class _AppointmentListScreenState extends State<AppointmentListScreen> {
               onClearFilters: _appointmentActiveFilterCount > 0
                   ? _clearAppointmentFilters
                   : null,
-              trailing: FilledButton.icon(
-                onPressed: _openNewAppointment,
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('Yeni Randevu'),
-              ),
+              trailing: AuthSession.canEditAppointments
+                  ? FilledButton.icon(
+                      onPressed: _openNewAppointment,
+                      icon: const Icon(Icons.add_rounded),
+                      label: const Text('Yeni Randevu'),
+                    )
+                  : null,
               filters: [
                 SizedBox(
                   width: 200,

@@ -8,7 +8,6 @@ import 'package:v2mem_clinic/features/inventory/inventory_list_screen.dart';
 import 'package:v2mem_clinic/features/payments/payment_list_screen.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_state_message.dart';
-import 'package:v2mem_clinic/shared/widgets/empty_state.dart';
 
 void main() {
   tearDown(AuthSession.clear);
@@ -48,7 +47,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(ClinicalStateMessage), findsWidgets);
-      expect(find.byType(EmptyState), findsNothing);
     });
   }
 }

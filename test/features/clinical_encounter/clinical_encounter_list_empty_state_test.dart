@@ -6,7 +6,6 @@ import 'package:v2mem_clinic/core/constants/app_roles.dart';
 import 'package:v2mem_clinic/features/clinical_encounter/clinical_encounter_list_screen.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_state_message.dart';
-import 'package:v2mem_clinic/shared/widgets/empty_state.dart';
 
 void main() {
   tearDown(AuthSession.clear);
@@ -59,7 +58,6 @@ void main() {
       findsOneWidget,
     );
     expect(find.byType(OutlinedButton), findsWidgets);
-    expect(find.byType(EmptyState), findsNothing);
 
     final texts = tester
         .widgetList<Text>(find.byType(Text))

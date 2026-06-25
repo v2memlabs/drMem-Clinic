@@ -13,6 +13,7 @@ import 'data/sent_message_list_data_source.dart';
 import 'data/sent_message_list_load_result.dart';
 import 'data/sent_message_list_refresh.dart';
 import 'data/sent_message_user_messages.dart';
+import 'models/message_template.dart';
 import 'models/sent_message.dart';
 
 class SentMessageListScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class SentMessageListScreen extends StatefulWidget {
 
 class _SentMessageListScreenState extends State<SentMessageListScreen> {
   String _query = '';
-  String? _channelFilter;
+  Channel? _channelFilter;
   SendStatus? _statusFilter;
   String? _categoryFilter;
   late Future<SentMessageListLoadResult> _loadFuture;
@@ -64,7 +65,8 @@ class _SentMessageListScreenState extends State<SentMessageListScreen> {
       _loadFuture = SentMessageListDataSource.load(
         patientId: widget.patientId,
         query: _query,
-        channelFilter: _channelFilter,
+        channelFilter:
+            _channelFilter != null ? messageChannelLabel(_channelFilter!) : null,
         statusEnumFilter: _statusFilter,
         categoryFilter: _categoryFilter,
       );
@@ -72,9 +74,11 @@ class _SentMessageListScreenState extends State<SentMessageListScreen> {
   }
 
   void _clearFilters() {
-    _channelFilter = null;
-    _statusFilter = null;
-    _categoryFilter = null;
+    setState(() {
+      _channelFilter = null;
+      _statusFilter = null;
+      _categoryFilter = null;
+    });
     _reload();
   }
 
@@ -126,20 +130,25 @@ class _SentMessageListScreenState extends State<SentMessageListScreen> {
               filters: [
                 ListFiltersRow(
                   fields: [
-                    SizedBox(
-                      width: 180,
-                      child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Kanal',
-                          hintText: 'WhatsApp, SMS...',
-                          isDense: true,
+                    ListFiltersRow.dropdown<Channel?>(
+                      label: 'Kanal',
+                      value: _channelFilter,
+                      items: [
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text('Tüm kanallar'),
                         ),
-                        onChanged: (v) {
-                          _channelFilter =
-                              v.trim().isEmpty ? null : v.trim();
-                          _reload();
-                        },
-                      ),
+                        ...Channel.values.map(
+                          (c) => DropdownMenuItem(
+                            value: c,
+                            child: Text(messageChannelLabel(c)),
+                          ),
+                        ),
+                      ],
+                      onChanged: (v) {
+                        setState(() => _channelFilter = v);
+                        _reload();
+                      },
                     ),
                     ListFiltersRow.dropdown<SendStatus?>(
                       label: 'Durum',
@@ -157,7 +166,7 @@ class _SentMessageListScreenState extends State<SentMessageListScreen> {
                         ),
                       ],
                       onChanged: (v) {
-                        _statusFilter = v;
+                        setState(() => _statusFilter = v);
                         _reload();
                       },
                     ),
@@ -216,10 +225,18 @@ class _SentMessageListScreenState extends State<SentMessageListScreen> {
 
   Widget _buildListBody(List<SentMessage> list) {
     if (list.isEmpty) {
+      final hasFilters = _activeFilterCount > 0 || _query.trim().isNotEmpty;
       return ClinicalStateMessage.empty(
         icon: Icons.send_outlined,
         title: 'Gönderim kaydı bulunamadı',
-        description: 'Arama veya filtre kriterlerinizi değiştirin.',
+        description: hasFilters
+            ? 'Arama veya filtre kriterlerinizi değiştirin.'
+            : 'Henüz gönderim kaydı yok. İlk mesajınızı hazırlayın.',
+        action: FilledButton.icon(
+          onPressed: _openSend,
+          icon: const Icon(Icons.send_outlined),
+          label: const Text('Mesaj Hazırla'),
+        ),
       );
     }
 

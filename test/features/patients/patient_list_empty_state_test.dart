@@ -7,7 +7,6 @@ import 'package:v2mem_clinic/features/patients/data/patient_list_state_messages.
 import 'package:v2mem_clinic/features/patients/patient_list_screen.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_state_message.dart';
-import 'package:v2mem_clinic/shared/widgets/empty_state.dart';
 
 void main() {
   tearDown(AuthSession.clear);
@@ -47,14 +46,6 @@ void main() {
     expect(find.text('Hastalar yükleniyor…'), findsOneWidget);
   });
 
-  testWidgets('list body never uses legacy EmptyState', (tester) async {
-    await pumpList(tester);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
-
-    expect(find.byType(EmptyState), findsNothing);
-  });
-
   testWidgets('no-match search shows ClinicalStateMessage.empty', (tester) async {
     await pumpList(tester);
     await tester.pumpAndSettle();
@@ -66,7 +57,6 @@ void main() {
 
     expect(find.byType(ClinicalStateMessage), findsWidgets);
     expect(find.text(PatientListStateMessages.emptySearchTitle), findsOneWidget);
-    expect(find.byType(EmptyState), findsNothing);
     expect(find.textContaining('Exception'), findsNothing);
     expect(find.textContaining('stack trace'), findsNothing);
   });

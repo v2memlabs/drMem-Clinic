@@ -263,8 +263,6 @@ class _PdfOutputDetailScreenState extends State<PdfOutputDetailScreen> {
                   onPressed:
                       canPreview ? () => _onPreviewPdf(context, p) : null,
                 ),
-                const DetailAction(label: 'Yazdır', comingSoon: true),
-                const DetailAction(label: 'Hastaya Verildi', comingSoon: true),
               ],
             ),
           ],

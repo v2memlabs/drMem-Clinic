@@ -312,7 +312,7 @@ FormSectionCard(
                             TextFormField(
                               controller: attachedFile,
                               decoration: const InputDecoration(
-                                labelText: 'Ekli Dosya Adı (placeholder)',
+                                labelText: 'Ekli Dosya Adı',
                                 isDense: true,
                               ),
                             ),

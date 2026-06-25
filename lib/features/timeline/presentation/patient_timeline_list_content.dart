@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../data/timeline_list_load_result.dart';
 import '../data/timeline_list_user_messages.dart';
+import '../data/timeline_event_navigation.dart';
 import '../models/timeline_event.dart';
 import 'remote_timeline_event_card.dart';
 import 'timeline_list_ui_states.dart';
@@ -96,9 +97,12 @@ class PatientTimelineListContent extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
       itemBuilder: (context, i) {
         final event = events[i];
+        final route = TimelineEventNavigation.routeFor(event);
         return RemoteTimelineEventCard(
           event: event,
-          onTap: onEventTap != null ? () => onEventTap!(event) : null,
+          onTap: route != null && onEventTap != null
+              ? () => onEventTap!(event)
+              : null,
         );
       },
     );

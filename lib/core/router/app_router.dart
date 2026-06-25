@@ -696,7 +696,9 @@ class AppRouter {
       GoRoute(
         path: '/imaging',
         builder: (context, state) {
-          if (!AuthSession.canViewImaging) return _deny('Görüntüleme notlarına yalnızca doktor erişebilir.');
+          if (!AuthSession.canViewImaging) {
+            return _deny('Görüntüleme notlarına bu rol ile erişilemez.');
+          }
           final params = Uri.parse(state.location).queryParameters;
           return ImagingListScreen(patientId: params['patientId']);
         },
@@ -717,7 +719,9 @@ class AppRouter {
       GoRoute(
         path: '/imaging/:id',
         builder: (context, state) {
-          if (!AuthSession.canViewImaging) return _deny('Görüntüleme detayına yalnızca doktor erişebilir.');
+          if (!AuthSession.canViewImaging) {
+            return _deny('Görüntüleme detayına bu rol ile erişilemez.');
+          }
           return ImagingDetailScreen(id: state.pathParameters['id']!);
         },
       ),
@@ -915,7 +919,7 @@ class AppRouter {
         path: '/prescriptions/:id',
         builder: (context, state) {
           if (!AuthSession.canViewPrescriptions) {
-            return _deny('Reçetelere yalnızca doktor erişebilir.');
+            return _deny('Reçetelere bu rol ile erişilemez.');
           }
           return PrescriptionDetailScreen(id: state.pathParameters['id']!);
         },
@@ -924,7 +928,7 @@ class AppRouter {
         path: '/prescriptions',
         builder: (context, state) {
           if (!AuthSession.canViewPrescriptions) {
-            return _deny('Reçetelere yalnızca doktor erişebilir.');
+            return _deny('Reçetelere bu rol ile erişilemez.');
           }
           final params = Uri.parse(state.location).queryParameters;
           return PrescriptionListScreen(patientId: params['patientId']);
@@ -962,7 +966,7 @@ class AppRouter {
         path: '/clinical-reports/:id',
         builder: (context, state) {
           if (!AuthSession.canViewClinicalReports) {
-            return _deny('Raporlara yalnızca doktor erişebilir.');
+            return _deny('Raporlara bu rol ile erişilemez.');
           }
           return ClinicalReportDetailScreen(id: state.pathParameters['id']!);
         },
@@ -971,7 +975,7 @@ class AppRouter {
         path: '/clinical-reports',
         builder: (context, state) {
           if (!AuthSession.canViewClinicalReports) {
-            return _deny('Raporlara yalnızca doktor erişebilir.');
+            return _deny('Raporlara bu rol ile erişilemez.');
           }
           final params = Uri.parse(state.location).queryParameters;
           return ClinicalReportListScreen(patientId: params['patientId']);
@@ -980,7 +984,9 @@ class AppRouter {
       GoRoute(
         path: '/pdf-outputs',
         builder: (context, state) {
-          if (!AuthSession.canViewPdfOutputs) return _deny('PDF çıktılara yalnızca doktor erişebilir.');
+          if (!AuthSession.canViewPdfOutputs) {
+            return _deny('PDF çıktılara bu rol ile erişilemez.');
+          }
           final params = Uri.parse(state.location).queryParameters;
           return PdfOutputListScreen(patientId: params['patientId']);
         },
@@ -1000,7 +1006,9 @@ class AppRouter {
       GoRoute(
         path: '/pdf-outputs/:id',
         builder: (context, state) {
-          if (!AuthSession.canViewPdfOutputs) return _deny('PDF detayına yalnızca doktor erişebilir.');
+          if (!AuthSession.canViewPdfOutputs) {
+            return _deny('PDF detayına bu rol ile erişilemez.');
+          }
           return PdfOutputDetailScreen(id: state.pathParameters['id']!);
         },
       ),

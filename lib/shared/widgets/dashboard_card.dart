@@ -4,7 +4,6 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../layout/responsive_layout.dart';
-import 'dashboard_status_badge.dart';
 import 'date_time_chip.dart';
 import 'premium_surface.dart';
 
@@ -14,7 +13,6 @@ class DashboardCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
-  final bool isPlaceholder;
   final Color? accentColor;
 
   const DashboardCard({
@@ -23,58 +21,45 @@ class DashboardCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.onTap,
-    this.isPlaceholder = false,
     this.accentColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final accent = accentColor ?? AppColors.accentTurquoise;
-    final iconAccent = isPlaceholder ? AppColors.textSecondary : accent;
-    final opacity = isPlaceholder ? 0.72 : 1.0;
 
-    final content = Opacity(
-      opacity: opacity,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                PremiumSurface.iconBadge(
-                  icon: icon,
-                  accent: iconAccent,
+    final content = Padding(
+      padding: const EdgeInsets.all(AppSpacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          PremiumSurface.iconBadge(
+            icon: icon,
+            accent: accent,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
                 ),
-                const Spacer(),
-                if (isPlaceholder) const DashboardStatusBadge(),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            const SizedBox(height: AppSpacing.xxs),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 12,
-                    height: 1.3,
-                  ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: AppSpacing.xxs),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                  height: 1.3,
+                ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
 

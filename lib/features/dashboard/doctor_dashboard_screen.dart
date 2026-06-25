@@ -84,7 +84,7 @@ class _DoctorDashboardScreenState extends State<DoctorDashboardScreen> {
           label: 'Yeni Muayene',
           route: '/clinical-records/new',
         ),
-      if (AuthSession.canViewAppointments)
+      if (AuthSession.canEditAppointments)
         const DashboardQuickAction(
           icon: Icons.event_available_outlined,
           label: 'Yeni Randevu',

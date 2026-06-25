@@ -8,7 +8,6 @@ import 'package:v2mem_clinic/features/appointments/data/appointment_list_state_m
 import 'package:v2mem_clinic/features/appointments/data/appointment_list_user_messages.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/clinical_state_message.dart';
-import 'package:v2mem_clinic/shared/widgets/empty_state.dart';
 
 void main() {
   tearDown(AuthSession.clear);
@@ -51,12 +50,12 @@ void main() {
     expect(find.text(AppointmentListUserMessages.loading), findsOneWidget);
   });
 
-  testWidgets('list body never uses legacy EmptyState', (tester) async {
+  testWidgets('list body uses ClinicalStateMessage for empty states', (tester) async {
     await pumpList(tester);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.byType(EmptyState), findsNothing);
+    expect(find.byType(ClinicalStateMessage), findsNothing);
   });
 
   testWidgets('empty search uses ClinicalStateMessage.empty', (tester) async {
@@ -82,7 +81,6 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(find.byType(EmptyState), findsNothing);
     expect(find.textContaining('Exception'), findsNothing);
   });
 

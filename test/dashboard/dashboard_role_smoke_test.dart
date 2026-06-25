@@ -7,11 +7,53 @@ import 'package:v2mem_clinic/features/dashboard/assistant_dashboard_screen.dart'
 import 'package:v2mem_clinic/features/dashboard/doctor_dashboard_screen.dart';
 import 'package:v2mem_clinic/features/dashboard/nurse_dashboard_screen.dart';
 import 'package:v2mem_clinic/features/dashboard/physiotherapist_dashboard_screen.dart';
+import 'package:v2mem_clinic/features/physiotherapy/data/async_physiotherapy_referral_repository_contract.dart';
+import 'package:v2mem_clinic/features/physiotherapy/data/physiotherapy_referral_repository_provider.dart';
+import 'package:v2mem_clinic/features/physiotherapy/models/physiotherapy_referral.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 import 'package:v2mem_clinic/shared/widgets/dashboard_card.dart';
 
+class _SmokeReferralRepo implements AsyncPhysiotherapyReferralRepositoryContract {
+  @override
+  Future<List<PhysiotherapyReferral>> getFiltered({
+    String? patientId,
+    String? query,
+    ReferralStatus? statusEnumFilter,
+    String? physiotherapistFilter,
+  }) async =>
+      [];
+
+  @override
+  Future<List<PhysiotherapyReferral>> getAll() async => [];
+
+  @override
+  Future<PhysiotherapyReferral?> getById(String id) async => null;
+
+  @override
+  Future<List<PhysiotherapyReferral>> getByPatientId(String patientId) async =>
+      [];
+
+  @override
+  Future<List<PhysiotherapyReferral>> search(String query) async => [];
+
+  @override
+  Future<PhysiotherapyReferral> add(PhysiotherapyReferral referral) async =>
+      referral;
+
+  @override
+  Future<PhysiotherapyReferral> updateSafeFields(
+    String id,
+    PhysiotherapyReferralSafeUpdate update,
+  ) async =>
+      throw UnimplementedError();
+}
+
 void main() {
-  tearDown(AuthSession.clear);
+  tearDown(() {
+    AuthSession.clear();
+    PhysiotherapyReferralRepositoryProvider.clearTestOverrides();
+    PhysiotherapyReferralRepositoryProvider.resetCache();
+  });
 
   testWidgets('physiotherapist shows quick action list without module grid',
       (tester) async {
@@ -24,6 +66,9 @@ void main() {
       ),
     );
 
+    PhysiotherapyReferralRepositoryProvider.testOverride =
+        _SmokeReferralRepo();
+
     final router = GoRouter(
       routes: [
         GoRoute(
@@ -34,13 +79,15 @@ void main() {
     );
 
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.text('Fizyoterapi'), findsOneWidget);
     expect(find.text('Bekleyen hastalar'), findsOneWidget);
     expect(find.textContaining('Workbench'), findsNothing);
-    expect(find.text('Hızlı işlemler'), findsOneWidget);
-    expect(find.text('Seans Notları'), findsOneWidget);
+    expect(find.text('FTR iş akışı'), findsOneWidget);
+    expect(find.text('Bekleyen Yönlendirmeler'), findsOneWidget);
     expect(find.text('Klinik Özetler'), findsNothing);
     expect(find.byType(DashboardCardGrid), findsNothing);
   });

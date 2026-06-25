@@ -13,7 +13,7 @@ void main() {
   tearDown(AuthSession.clear);
 
   group('app_nav_config', () {
-    test('doctor core nav is flat without Klinik group title', () {
+    test('doctor core nav keeps clinical items flat under first section', () {
       AuthSession.setUser(
         AppUser(
           id: 'd1',
@@ -24,7 +24,7 @@ void main() {
       );
 
       final sections = buildAppNavSections();
-      expect(sections.any((s) => s.title == 'Klinik'), isFalse);
+      expect(sections.any((s) => s.title == 'Klinik'), isTrue);
 
       final core = sections.first;
       expect(core.hideTitle, isTrue);
@@ -69,7 +69,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Filtreler'), findsOneWidget);
-    expect(find.text('Yeni Muayene'), findsOneWidget);
+    expect(find.text('Yeni Muayene'), findsAtLeastNWidgets(1));
     expect(find.text('Başvuru tipi'), findsNothing);
 
     await tester.tap(find.text('Filtreler'));

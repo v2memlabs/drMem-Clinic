@@ -117,9 +117,9 @@ void main() {
 
     final labels = _quickActionLabels(tester);
     expect(labels.length, lessThanOrEqualTo(3));
-    expect(labels, contains('Yönlendirmeler'));
+    expect(labels, contains('Bekleyen Yönlendirmeler'));
+    expect(labels, contains('Randevularım'));
     expect(labels, contains('Seans Notları'));
-    expect(labels, contains('Egzersiz Programları'));
     expect(labels, isNot(contains('Klinik Özetler')));
   });
 

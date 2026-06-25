@@ -44,6 +44,7 @@ void main() {
       final search = find.byType(TextField);
       expect(search, findsWidgets);
       await tester.enterText(search.first, '___no_match___');
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.pumpAndSettle();
 
       expect(find.byType(ClinicalStateMessage), findsWidgets);

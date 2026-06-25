@@ -136,9 +136,9 @@ void main() {
     expect(find.text('Fizyoterapi'), findsOneWidget);
     expect(find.text('Bekleyen hastalar'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
-    expect(find.text('Yönlendirmeler'), findsOneWidget);
+    expect(find.text('Bekleyen Yönlendirmeler'), findsOneWidget);
+    expect(find.text('Randevularım'), findsOneWidget);
     expect(find.text('Seans Notları'), findsOneWidget);
-    expect(find.text('Egzersiz Programları'), findsOneWidget);
     expect(find.text('Gizli Hasta Adı'), findsNothing);
     expect(find.textContaining('Gizli doktor'), findsNothing);
     expect(find.textContaining('Gizli not'), findsNothing);

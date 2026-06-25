@@ -15,7 +15,9 @@ void main() {
         'category': 'kontrol_hatirlatma',
         'template_title': 'Kontrol Hatırlatma',
         'status': 'gonderildi',
+        'content': 'Kontrol randevunuz tam metin',
         'content_preview': 'Kontrol randevunuz...',
+        'patient_email': 'hasta@ornek.com',
         'related_module': 'Mesajlaşma',
         'notes': '',
         'sent_by_display': 'Asistan',
@@ -31,6 +33,8 @@ void main() {
       expect(message.category, 'Kontrol Hatırlatma');
       expect(message.status, SendStatus.gonderildi);
       expect(message.sentBy, 'Asistan');
+      expect(message.content, 'Kontrol randevunuz tam metin');
+      expect(message.patientEmail, 'hasta@ornek.com');
     });
 
     test('toInsertRow converts display labels to enum names', () {

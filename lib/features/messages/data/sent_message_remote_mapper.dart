@@ -27,6 +27,8 @@ abstract final class SentMessageRemoteMapper {
       sentBy: _optionalString(row['sent_by_display']) ?? '',
       status: _enumFromDb(SendStatus.values, row['status']),
       contentPreview: _optionalString(row['content_preview']) ?? '',
+      content: _optionalString(row['content']) ?? '',
+      patientEmail: _optionalString(row['patient_email']) ?? '',
       relatedModule: _optionalString(row['related_module']) ?? '',
       notes: _optionalString(row['notes']) ?? '',
     );

@@ -12,6 +12,8 @@ class SentMessage {
   final String sentBy;
   final SendStatus status;
   final String contentPreview;
+  final String content;
+  final String patientEmail;
   final String relatedModule;
   final String notes;
 
@@ -27,6 +29,8 @@ class SentMessage {
     required this.sentBy,
     required this.status,
     required this.contentPreview,
+    this.content = '',
+    this.patientEmail = '',
     this.relatedModule = '',
     this.notes = '',
   });

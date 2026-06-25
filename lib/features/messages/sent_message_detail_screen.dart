@@ -1,5 +1,6 @@
 import '../../../shared/widgets/clinical_stacked_sections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_spacing.dart';
@@ -11,10 +12,12 @@ import '../../shared/widgets/detail_actions_panel.dart';
 import '../../shared/widgets/detail_header_card.dart';
 import '../../shared/widgets/info_section_card.dart';
 import '../../shared/widgets/page_header.dart';
+import 'data/message_channel_launcher.dart';
 import 'data/sent_message_detail_data_source.dart';
 import 'data/sent_message_list_refresh.dart';
 import 'data/sent_message_user_messages.dart';
 import 'models/sent_message.dart';
+import 'widgets/message_preview_dialog.dart';
 
 class SentMessageDetailScreen extends StatefulWidget {
   final String id;
@@ -29,6 +32,7 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
   late Future<SentMessageDetailLoadResult> _loadFuture;
   bool _activatedOnce = false;
   int _lastRefreshVersion = SentMessageListRefresh.version;
+  bool _launching = false;
 
   @override
   void initState() {
@@ -55,6 +59,91 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
     setState(() {
       _loadFuture = SentMessageDetailDataSource.load(widget.id);
     });
+  }
+
+  String _messageBody(SentMessage message) {
+    final full = message.content.trim();
+    if (full.isNotEmpty) return full;
+    return message.contentPreview.trim();
+  }
+
+  Future<void> _copyContent(SentMessage message) async {
+    final body = _messageBody(message);
+    if (body.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kopyalanacak mesaj içeriği yok.')),
+      );
+      return;
+    }
+    await Clipboard.setData(ClipboardData(text: body));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Mesaj içeriği panoya kopyalandı.')),
+    );
+  }
+
+  Future<void> _openInChannel(SentMessage message) async {
+    if (_launching) return;
+
+    final body = _messageBody(message);
+    if (body.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kanalda açılacak mesaj içeriği yok.')),
+      );
+      return;
+    }
+
+    final recipientError = MessageChannelLauncher.validateRecipient(
+      channelLabel: message.channel,
+      phone: message.patientPhone,
+      email: message.patientEmail,
+    );
+    if (recipientError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(recipientError)),
+      );
+      return;
+    }
+
+    setState(() => _launching = true);
+    final launched = await MessageChannelLauncher.launch(
+      channelLabel: message.channel,
+      phone: message.patientPhone,
+      email: message.patientEmail,
+      body: body,
+      subject: message.templateTitle,
+    );
+    if (!mounted) return;
+    setState(() => _launching = false);
+
+    if (!launched) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            MessageChannelLaunchFailure.launchFailed.userMessage,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _previewMessage(SentMessage message) async {
+    final body = _messageBody(message);
+    if (body.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Önizlenecek mesaj içeriği yok.')),
+      );
+      return;
+    }
+
+    await MessagePreviewDialog.show(
+      context,
+      channel: message.channel,
+      phone: message.patientPhone,
+      email: message.patientEmail,
+      content: body,
+      confirmSend: false,
+    );
   }
 
   @override
@@ -91,12 +180,19 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
           }
 
           final sentStr = _formatDateTime(m.sentAt);
+          final messageBody = _messageBody(m);
 
           return PatientLookupBuilder(
             patientId: m.patientId,
             builder: (context, patient) {
               final fileNo = patient?.fileNumber ?? '';
-              return _buildSentMessageBody(context, m, sentStr, fileNo);
+              return _buildSentMessageBody(
+                context,
+                m,
+                sentStr,
+                fileNo,
+                messageBody,
+              );
             },
           );
         },
@@ -109,6 +205,7 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
     SentMessage m,
     String sentStr,
     String fileNo,
+    String messageBody,
   ) {
     return ResponsiveDetailPage(
       child: Column(
@@ -135,6 +232,8 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
                     fileNo.isEmpty ? kDisplayUnspecified : fileNo,
                   ),
                   InfoSectionRow('Telefon', displayField(m.patientPhone)),
+                  if (m.patientEmail.trim().isNotEmpty)
+                    InfoSectionRow('E-posta', displayField(m.patientEmail)),
                   InfoSectionRow('Gönderen', displayField(m.sentBy)),
                   InfoSectionRow('Kanal', m.channel),
                   InfoSectionRow('Kategori', m.category),
@@ -161,8 +260,8 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
                 title: 'Mesaj İçeriği',
                 rows: [
                   InfoSectionRow(
-                    'Önizleme',
-                    displayField(m.contentPreview),
+                    messageBody.length > 200 ? 'İçerik' : 'Önizleme',
+                    displayField(messageBody),
                     emphasize: true,
                   ),
                   InfoSectionRow('Notlar', displayField(m.notes)),
@@ -175,8 +274,20 @@ class _SentMessageDetailScreenState extends State<SentMessageDetailScreen> {
             topSpacing: 0,
             actions: [
               DetailAction(
-                label: 'Tekrar Hazırla',
+                label: 'Kanalda Aç',
                 filled: true,
+                onPressed: _launching ? null : () => _openInChannel(m),
+              ),
+              DetailAction(
+                label: 'İçeriği Kopyala',
+                onPressed: () => _copyContent(m),
+              ),
+              DetailAction(
+                label: 'Önizle',
+                onPressed: () => _previewMessage(m),
+              ),
+              DetailAction(
+                label: 'Tekrar Hazırla',
                 onPressed: () => context.push(
                   '/messages/send?patientId=${m.patientId}',
                 ),

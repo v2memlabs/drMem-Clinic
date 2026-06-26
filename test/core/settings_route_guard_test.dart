@@ -3,10 +3,15 @@ import 'package:v2mem_clinic/core/auth/auth_route_permissions.dart';
 import 'package:v2mem_clinic/core/auth/auth_session.dart';
 import 'package:v2mem_clinic/core/constants/app_roles.dart';
 import 'package:v2mem_clinic/core/router/settings_route_guard.dart';
+import 'package:v2mem_clinic/core/tenant/tenant_financial_feature_gate.dart';
+import 'package:v2mem_clinic/features/settings/models/tenant_financial_feature_settings.dart';
 import 'package:v2mem_clinic/shared/models/app_user.dart';
 
 void main() {
-  tearDown(AuthSession.clear);
+  tearDown(() {
+    AuthSession.clear();
+    TenantFinancialFeatureGate.reset();
+  });
 
   AppUser user(String role) => AppUser(
         id: 'u-$role',
@@ -18,11 +23,13 @@ void main() {
   group('SettingsRouteGuard', () {
     test('allows doctor on all standard settings paths', () {
       AuthSession.setUser(user(AppRoles.doctor));
+      TenantFinancialFeatureGate.apply(TenantFinancialFeatureSettings.defaults);
       for (final path in [
         '/settings',
         '/settings/profile',
         '/settings/clinic',
         '/settings/patient-settings',
+        '/settings/clinic-finance',
         '/settings/demo-usage',
         '/settings/subscription',
         '/settings/users-roles',
@@ -80,6 +87,24 @@ void main() {
       expect(
         SettingsRouteGuard.denyMessageForPath('/settings/users-roles/invite'),
         'Kullanıcı daveti yalnızca doktor hesabı tarafından gönderilebilir.',
+      );
+    });
+
+    test('denies doctor on clinic-finance when payment records disabled', () {
+      AuthSession.setUser(user(AppRoles.doctor));
+      TenantFinancialFeatureGate.apply(
+        TenantFinancialFeatureSettings.defaults.copyWithFlag(
+          TenantFinancialFeatureKey.paymentRecords,
+          false,
+        ),
+      );
+      expect(
+        SettingsRouteGuard.denyMessageForPath('/settings/clinic-finance'),
+        'Finansal istatistiklere yalnızca klinik yönetimi erişebilir.',
+      );
+      expect(
+        AuthRoutePermissions.canAccessPath('/settings/clinic-finance'),
+        isFalse,
       );
     });
 

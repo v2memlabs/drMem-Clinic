@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/auth/auth_session.dart';
-import 'clinic_finance_statistics_screen.dart';
+import 'data/settings_feature_visibility.dart';
 
 /// Ayarlar hub kategori tanımı.
 class SettingsCategoryDef {

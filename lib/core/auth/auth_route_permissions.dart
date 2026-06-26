@@ -54,9 +54,12 @@ abstract final class AuthRoutePermissions {
           path.startsWith('/settings/users-roles/')) {
         return AuthSession.canEditClinicProfile;
       }
+      if (path == '/settings/clinic-finance') {
+        return AuthSession.canViewDoctorOnlySettings &&
+            TenantFinancialFeatureGate.paymentRecordsEnabled;
+      }
       if (path == '/settings/clinic' ||
           path == '/settings/patient-settings' ||
-          path == '/settings/clinic-finance' ||
           path == '/settings/demo-usage' ||
           path == '/settings/subscription') {
         return AuthSession.canViewDoctorOnlySettings;

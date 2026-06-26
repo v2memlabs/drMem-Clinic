@@ -1,6 +1,6 @@
 import '../auth/auth_route_permissions.dart';
 import '../auth/auth_session.dart';
-import '../../features/settings/clinic_finance_statistics_screen.dart';
+import '../../features/settings/data/settings_feature_visibility.dart';
 
 /// Ayarlar rotaları için tek kaynak erişim kontrolü.
 ///

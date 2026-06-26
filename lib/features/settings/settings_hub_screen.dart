@@ -6,6 +6,7 @@ import '../../core/settings/app_settings_controller.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../shared/layout/responsive_page_body.dart';
 import '../../shared/widgets/app_shell.dart';
+import '../../shared/widgets/clinical_snack_bar.dart';
 import '../../shared/widgets/page_header.dart';
 import 'settings_categories.dart';
 import 'settings_category_card.dart';
@@ -78,10 +79,9 @@ class SettingsHubScreen extends StatelessWidget {
                       );
                     }
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Ayarlar varsayılan değerlere döndürüldü.'),
-                        ),
+                      showClinicalSnackBar(
+                        context,
+                        'Ayarlar varsayılan değerlere döndürüldü.',
                       );
                     }
                   },

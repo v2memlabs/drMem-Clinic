@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:v2mem_clinic/core/auth/auth_route_permissions.dart';
 import 'package:v2mem_clinic/core/auth/auth_session.dart';
 import 'package:v2mem_clinic/core/constants/app_roles.dart';
+import 'package:v2mem_clinic/core/tenant/tenant_financial_feature_gate.dart';
 import 'package:v2mem_clinic/features/settings/demo_usage_settings_content.dart';
+import 'package:v2mem_clinic/features/settings/models/tenant_financial_feature_settings.dart';
 import 'package:v2mem_clinic/features/settings/settings_categories.dart';
 import 'package:v2mem_clinic/features/settings/settings_hub_screen.dart';
 import 'package:v2mem_clinic/features/settings/settings_product_labels.dart';
@@ -13,6 +15,7 @@ import 'package:v2mem_clinic/shared/models/app_user.dart';
 void main() {
   tearDown(() {
     AuthSession.clear();
+    TenantFinancialFeatureGate.reset();
   });
 
   AppUser user(String role) => AppUser(
@@ -41,15 +44,33 @@ void main() {
   });
 
   group('SettingsCategories visibility', () {
-    test('doctor sees 8 categories including users-roles', () {
+    test('doctor sees 9 categories including users-roles and clinic-finance', () {
       AuthSession.setUser(user(AppRoles.doctor));
+      TenantFinancialFeatureGate.apply(TenantFinancialFeatureSettings.defaults);
       final visible = SettingsCategories.visibleForCurrentUser();
-      expect(visible.length, 8);
+      expect(visible.length, 9);
       expect(visible.any((c) => c.id == 'clinic-workflow'), isFalse);
       expect(
         visible.any((c) => c.id == 'users-roles'),
         isTrue,
       );
+      expect(
+        visible.any((c) => c.id == 'clinic-finance'),
+        isTrue,
+      );
+    });
+
+    test('doctor does not see clinic-finance when payment records disabled', () {
+      AuthSession.setUser(user(AppRoles.doctor));
+      TenantFinancialFeatureGate.apply(
+        TenantFinancialFeatureSettings.defaults.copyWithFlag(
+          TenantFinancialFeatureKey.paymentRecords,
+          false,
+        ),
+      );
+      final visible = SettingsCategories.visibleForCurrentUser();
+      expect(visible.length, 8);
+      expect(visible.any((c) => c.id == 'clinic-finance'), isFalse);
     });
 
     test('assistant sees profile, display-region and password only', () {

@@ -15,6 +15,29 @@ void main() {
     TenantFinancialFeatureGate.reset();
   });
 
+  test('clinic-finance path requires payment records financial flag', () {
+    _signInDoctor();
+
+    TenantFinancialFeatureGate.apply(
+      TenantFinancialFeatureSettings.defaults.copyWithFlag(
+        TenantFinancialFeatureKey.paymentRecords,
+        false,
+      ),
+    );
+
+    expect(
+      AuthRoutePermissions.canAccessPath('/settings/clinic-finance'),
+      isFalse,
+    );
+
+    TenantFinancialFeatureGate.apply(TenantFinancialFeatureSettings.defaults);
+
+    expect(
+      AuthRoutePermissions.canAccessPath('/settings/clinic-finance'),
+      isTrue,
+    );
+  });
+
   test('wizard-payment path requires encounter payment step financial flag', () {
     _signInDoctor();
 

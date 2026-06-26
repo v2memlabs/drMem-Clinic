@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/auth/auth_session.dart';
 import '../../core/theme/app_spacing.dart';
@@ -269,6 +270,25 @@ class _PatientSettingsScreenState extends State<PatientSettingsScreen> {
                 )
               : null,
         ),
+        if (AuthSession.canEditClinicProfile) ...[
+          const SizedBox(height: AppSpacing.sm),
+          SettingsSectionCard(
+            title: 'Laboratuvar',
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.biotech_outlined),
+                title: const Text('Lab istem kataloğu'),
+                subtitle: Text(
+                  'Tetkik grupları ve varsayılan lab istem şablonlarını yönetin.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted),
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push('/lab-order-templates/catalog-settings'),
+              ),
+            ],
+          ),
+        ],
       ],
     );
   }

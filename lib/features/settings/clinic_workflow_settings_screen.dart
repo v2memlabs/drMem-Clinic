@@ -9,6 +9,7 @@ import 'data/clinic_workflow_settings_repository.dart';
 import 'data/clinic_workflow_settings_repository_provider.dart';
 import 'models/clinic_workflow_settings.dart';
 import 'settings_subpage_scaffold.dart';
+import 'settings_categories.dart';
 import 'settings_widgets.dart';
 import '../../shared/widgets/clinical_notice.dart';
 import '../../shared/widgets/clinical_notice_tone.dart';
@@ -208,7 +209,7 @@ class _ClinicWorkflowSettingsScreenState
     return SettingsSubpageScaffold(
       title: 'Klinik İşleyiş',
       icon: Icons.schedule_outlined,
-      fallbackRoute: AuthSession.dashboardRoute,
+      fallbackRoute: SettingsCategories.hubPath,
       children: [
         ClinicalNotice(
           tone: ClinicalNoticeTone.info,

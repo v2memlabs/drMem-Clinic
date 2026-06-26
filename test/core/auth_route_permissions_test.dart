@@ -242,6 +242,15 @@ void main() {
       expect(AuthRoutePermissions.canAccessPath('/settings/demo-usage'), isTrue);
       expect(AuthRoutePermissions.canAccessPath('/settings/subscription'), isTrue);
 
+      TenantFinancialFeatureGate.apply(
+        TenantFinancialFeatureSettings.defaults.copyWithFlag(
+          TenantFinancialFeatureKey.paymentRecords,
+          false,
+        ),
+      );
+      expect(AuthRoutePermissions.canAccessPath('/settings/clinic-finance'), isFalse);
+      TenantFinancialFeatureGate.apply(TenantFinancialFeatureSettings.defaults);
+
       asRole(AppRoles.assistant);
       expect(AuthRoutePermissions.canAccessPath('/settings/clinic'), isFalse);
       expect(AuthRoutePermissions.canAccessPath('/settings/patient-settings'), isFalse);
@@ -349,7 +358,6 @@ void main() {
       expect(routes, isNot(contains('/audit-logs')));
       expect(routes, isNot(contains('/patient-timeline')));
       expect(routes, isNot(contains('/patient-tags')));
-      expect(routes, isNot(contains('/patient-alerts')));
     });
 
     test('doctor menu excludes removed legacy sidebar routes', () {
@@ -361,7 +369,7 @@ void main() {
           .toList();
       expect(routes, isNot(contains('/patient-timeline')));
       expect(routes, isNot(contains('/patient-tags')));
-      expect(routes, isNot(contains('/patient-alerts')));
+      expect(routes, contains('/patient-alerts'));
       expect(routes, isNot(contains('/anamnesis')));
       expect(routes, contains('/audit-logs'));
       expect(routes, contains('/settings'));

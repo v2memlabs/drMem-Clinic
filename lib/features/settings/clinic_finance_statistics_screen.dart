@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/auth/auth_session.dart';
-import '../../core/tenant/tenant_financial_feature_gate.dart';
 import '../../core/theme/app_spacing.dart';
 import '../payments/data/payment_statistics_calculator.dart';
 import '../payments/data/payment_statistics_data_source.dart';
@@ -10,6 +8,8 @@ import '../payments/models/payment_statistics_snapshot.dart';
 import '../payments/widgets/payment_ui_helpers.dart';
 import 'settings_subpage_scaffold.dart';
 import 'settings_widgets.dart';
+
+export 'data/settings_feature_visibility.dart';
 
 class ClinicFinanceStatisticsScreen extends StatefulWidget {
   const ClinicFinanceStatisticsScreen({super.key});
@@ -249,7 +249,3 @@ class _ClinicFinanceStatisticsScreenState
     return entries;
   }
 }
-
-bool clinicFinanceStatisticsVisible() =>
-    AuthSession.canViewDoctorOnlySettings &&
-    TenantFinancialFeatureGate.paymentRecordsEnabled;

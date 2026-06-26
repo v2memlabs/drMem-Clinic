@@ -9,6 +9,7 @@ import 'data/staff_leave_record_mapper.dart';
 import 'data/staff_leave_record_repository.dart';
 import 'data/staff_leave_record_repository_provider.dart';
 import 'settings_subpage_scaffold.dart';
+import 'settings_categories.dart';
 import 'settings_widgets.dart';
 import '../../shared/widgets/app_time_picker.dart';
 import '../../shared/widgets/clinical_notice.dart';
@@ -208,7 +209,7 @@ class _StaffLeaveSettingsScreenState extends State<StaffLeaveSettingsScreen> {
     return SettingsSubpageScaffold(
       title: 'Personel izinleri',
       icon: Icons.beach_access_outlined,
-      fallbackRoute: AuthSession.dashboardRoute,
+      fallbackRoute: SettingsCategories.hubPath,
       children: [
         TextButton.icon(
           onPressed: () => context.go('/clinic-workflow'),
